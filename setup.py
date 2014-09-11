@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import os
 
 version = '1.0'
 
@@ -41,7 +40,9 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        # -*- Extra requirements: -*-
+        'redis',
+        'celery',
+        'boto',
     ],
     extras_require={'test': ['plone.app.testing']},
     entry_points="""
