@@ -1,13 +1,32 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="netsight.cloudstorage">
+    i18n_domain="netsight.cloudstorage" >
 
   <five:registerPackage package="." initialize=".initialize" />
 
   <includeDependencies package="." />
+  <include package=".browser"/>
+  <include package="collective.monkeypatcher"/>
+
+  <monkey:patch
+      description="Intercept file downloads to redirect to cloud storage if available"
+      class="Products.Archetypes.Field.FileField"
+      original="download"
+      replacement=".monkeypatches.file_field_download"
+      preserveOriginal="true"
+      />
+
+  <monkey:patch
+      description="Intercept blob file downloads to redirect to cloud storage if available"
+      class="plone.app.blob.field.BlobField"
+      original="download"
+      replacement=".monkeypatches.file_field_download"
+      preserveOriginal="true"
+      />
 
   <genericsetup:registerProfile
       name="default"
@@ -16,6 +35,10 @@
       description="Installs the netsight.cloudstorage package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  <!-- -*- extra stuff goes here -*- -->
+  <adapter
+      for="*"
+      provides=".interfaces.ICloudStorage"
+      factory=".adapters.CloudStorage"
+      />
 
 </configure>

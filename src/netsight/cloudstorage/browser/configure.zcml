@@ -1,0 +1,40 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="netsight.cloudstorage">
+
+  <include package="Products.CMFCore" file="permissions.zcml"/>
+
+  <browser:page
+      name="cloudstorage-retrieve"
+      for="*"
+      class=".views.CloudStorageProcessing"
+      attribute="retrieve"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      name="cloudstorage-callback"
+      for="*"
+      class=".views.CloudStorageProcessing"
+      attribute="callback"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      name="celery-test"
+      for="*"
+      class=".views.ProcessCloudStorage"
+      attribute="test_celery"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      name="manual-processing"
+      for="*"
+      class=".views.ProcessCloudStorage"
+      attribute="manual_processing"
+      permission="zope.Public"
+      />
+
+</configure>
