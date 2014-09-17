@@ -40,11 +40,16 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'plone.api',
         'redis',
         'celery',
         'boto',
+        'requests',
+        'collective.monkeypatcher',
     ],
-    extras_require={'test': ['plone.app.testing']},
+    extras_require={'test': [
+        'plone.app.testing',
+    ]},
     entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
