@@ -41,4 +41,11 @@
       factory=".adapters.CloudStorage"
       />
 
+  <browser:page
+    name="cloudstorage-controlpanel"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    permission="cmf.ManagePortal"
+    class=".controlpanel.ZooControlPanelView"
+    />
+
 </configure>
