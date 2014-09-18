@@ -9,18 +9,26 @@ from boto.gs.connection import Location
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from celery import Celery
-
-from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, BROKER_URL
 import requests
 
-app = Celery('netsight.cloudstorage.tasks', broker=BROKER_URL)
 logger = logging.getLogger('netsight.cloudstorage.celery_tasks')
+# TODO: Make broker_url customisable (OMG SO HARD!!)
+broker_url = 'redis://localhost:6379/0/'
+app = Celery('netsight.cloudstorage.tasks', broker=broker_url)
 
 
 @app.task
-def upload_to_s3(bucket_name, source_url, callback_url, field, security_token):
+def upload_to_s3(bucket_name,
+                 source_url,
+                 callback_url,
+                 field,
+                 security_token,
+                 aws_key,
+                 aws_secret_key):
     """
     Upload a file from the given Plone path to S3
+
+
 
     :param callback_url: URL to call once the upload has completed
     :type callback_url: str
@@ -32,10 +40,14 @@ def upload_to_s3(bucket_name, source_url, callback_url, field, security_token):
     :type field: dict
     :param security_token: security token to authorise retrieving the file
     :type security_token: str
+    :param aws_key: AWS Access Key
+    :type aws_key: str
+    :param aws_secret_key: AWS Secret Access Key
+    :type aws_secret_key: str
     :return: Callback URL and security params for callback task
     :rtype: tuple
     """
-    s3 = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+    s3 = S3Connection(aws_key, aws_secret_key)
 
     in_bucket = s3.lookup(bucket_name)
     if in_bucket is None:

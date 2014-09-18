@@ -3,6 +3,7 @@
     xmlns:monkey="http://namespaces.plone.org/monkey"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="netsight.cloudstorage" >
 
@@ -45,7 +46,7 @@
     name="cloudstorage-controlpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     permission="cmf.ManagePortal"
-    class=".controlpanel.ZooControlPanelView"
+    class=".controlpanel.CloudStorageControlPanelView"
     />
 
 </configure>

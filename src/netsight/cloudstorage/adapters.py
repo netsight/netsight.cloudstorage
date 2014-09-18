@@ -7,17 +7,23 @@ from uuid import uuid4
 from BTrees.OOBTree import OOBTree
 from Products.CMFCore.interfaces import IContentish
 import transaction
+from netsight.cloudstorage.utils import get_value_from_config, \
+    get_value_from_registry
 from persistent.dict import PersistentDict
 from zope.annotation import IAnnotations
 from zope.component import adapts, getUtility
 from zope.interface import implements
 
-from netsight.cloudstorage.tasks import upload_to_s3, upload_callback
+from boto.s3.key import Key
+from boto.s3.connection import S3Connection
+
+from .tasks import upload_to_s3, upload_callback
 from .interfaces import ICloudStorage
-from .config import BUCKET_NAME
+from .config import BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 logger = logging.getLogger("netsight.cloudstorage")
 DATA_KEY = 'cloudstorage_data'
+port = get_value_from_config('instance_port')
 
 
 class CloudStorage(object):
@@ -115,18 +121,25 @@ class CloudStorage(object):
             # job goes on queue
             transaction.commit()
 
-            root_url = self.context.absolute_url()
+            path = '/'.join(self.context.getPhysicalPath())
+            root_url = 'http://localhost:%s/%s' % (port, path)
 
             logger.debug('Queuing field %s to be uploaded' % field['name'])
             source_url = '%s/@@cloudstorage-retrieve' % root_url
             callback_url = '%s/@@cloudstorage-callback' % root_url
-            bucket_name = 'netsight.cloudstorage.%s' % BUCKET_NAME
+            bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
+                'bucket_name'
+            )
+            aws_key = 1
+            aws_secret_key = 1
             upload_task = upload_to_s3.s(
                 bucket_name,
                 source_url,
                 callback_url,
                 field,
-                security_token
+                security_token,
+                aws_key,
+                aws_secret_key
             )
             upload_task.apply_async(link=upload_callback.s())
 
@@ -136,5 +149,19 @@ class CloudStorage(object):
         :return: URL on S3 of given field's content
         :rtype: str
         """
-        return 'http://google.com'
+        storage = self._getStorage()
+        if fieldname in storage['cloud_available'].keys():
+            s3 = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+            bucket_name = 'netsight.cloudstorage.%s' % BUCKET_NAME
+            bucket = s3.lookup(bucket_name)
+            if bucket is None:
+                logger.warn('Bucket %s does not exist', bucket_name)
+                return None
+            key = Key(bucket)
+            key.key = '%s-%s' % (fieldname, self.context.UID())
+            return key.generate_url(60)
+        else:
+            logger.warn('Field %s is not yet available in cloudstorage',
+                        fieldname)
+        return None
 
