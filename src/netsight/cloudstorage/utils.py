@@ -10,7 +10,6 @@ from .exceptions import ConfigurationError
 
 def get_value_from_config(key):
     main_config = getConfiguration()
-    import pdb; pdb.set_trace()
     product_config = getattr(main_config, 'product_config', None)
     if product_config is None:
         raise ConfigurationError(
