@@ -62,6 +62,7 @@ class CloudStorage(object):
                         'name': field.getName(),
                         'context_uid': self.context.UID(),
                         'mimetype': field.getContentType(self.context),
+                        'size': field.get_size(self.context),
                     })
         else:
             from plone.dexterity.interfaces import IDexterityFTI
@@ -106,9 +107,12 @@ class CloudStorage(object):
         logger.info('enqueue called for %s' % self.context.absolute_url())
 
         for field in self._getFields():
-            # Check field content type
-            mimetype = field['mimetype']
-
+            min_size = get_value_from_registry('min_file_size')
+            if field['size'] < min_size * 1024 * 1024:
+                logger.info('File on field %s is too small (< %sMB)',
+                             field['name'],
+                             min_size)
+                continue
             # TODO: Find and define "valid formats"
             # if mimetype not in VALID_FORMATS:
             #     continue
