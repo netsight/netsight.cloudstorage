@@ -13,7 +13,7 @@ import requests
 
 logger = logging.getLogger('netsight.cloudstorage.celery_tasks')
 # TODO: Make broker_url customisable (OMG SO HARD!!)
-broker_url = 'redis://localhost:6379/0/'
+broker_url = 'redis://localhost:6379/0'
 app = Celery('netsight.cloudstorage.tasks', broker=broker_url)
 
 
