@@ -18,4 +18,6 @@ class ICloudStorageSettings(Interface):
         title=u'Minimum file size(MB)',
         description=u'This is the file size above which file field contents '
                     u'will be automatically uploaded to cloud storage to avoid'
-                    u' being served from Plone')
+                    u' being served from Plone',
+        default=10
+    )
