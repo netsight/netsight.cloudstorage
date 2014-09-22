@@ -128,7 +128,7 @@ class CloudStorage(object):
             path = '/'.join(self.context.getPhysicalPath())
             root_url = 'http://localhost:%s/%s' % (port, path)
 
-            logger.debug('Queuing field %s to be uploaded' % field['name'])
+            logger.info('Queuing field %s to be uploaded',  field['name'])
             source_url = '%s/@@cloudstorage-retrieve' % root_url
             callback_url = '%s/@@cloudstorage-callback' % root_url
             bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
