@@ -134,8 +134,8 @@ class CloudStorage(object):
             bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
                 'bucket_name'
             )
-            aws_key = 1
-            aws_secret_key = 1
+            aws_key = get_value_from_registry('aws_access_key')
+            aws_secret_key = get_value_from_registry('aws_secret_access_key')
             upload_task = upload_to_s3.s(
                 bucket_name,
                 source_url,
