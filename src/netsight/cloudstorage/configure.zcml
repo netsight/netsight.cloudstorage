@@ -49,4 +49,10 @@
     class=".controlpanel.CloudStorageControlPanelView"
     />
 
+  <subscriber
+      for="Products.CMFCore.interfaces.IContentish
+          zope.lifecycleevent.IObjectModifiedEvent"
+      handler=".subscribers.content_saved"
+      />
+
 </configure>
