@@ -12,7 +12,7 @@ class ICloudStorage(Interface):
 class ICloudStorageSettings(Interface):
 
     aws_access_key = schema.TextLine(title=u'AWS Access Key')
-    aws_secret_acces_key = schema.TextLine(title=u'AWS Secret Access Key')
+    aws_secret_access_key = schema.TextLine(title=u'AWS Secret Access Key')
     bucket_name = schema.TextLine(title=u'S3 bucket name')
     min_file_size = schema.Int(
         title=u'Minimum file size(MB)',
