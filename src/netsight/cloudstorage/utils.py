@@ -24,4 +24,7 @@ def get_value_from_config(key):
 
 def get_value_from_registry(key):
     registry = getUtility(IRegistry)
-    return registry.get('my.package.%s' % key, None)
+    return registry.get(
+        'netsight.cloudstorage.interfaces.ICloudStorageSettings.%s' % key,
+        None
+    )
