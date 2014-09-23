@@ -2,7 +2,6 @@ import logging
 
 from Products.Five import BrowserView
 from netsight.cloudstorage.interfaces import ICloudStorage
-from netsight.cloudstorage.tasks import test_task
 
 logger = logging.getLogger('netsight.cloudstorage')
 
@@ -51,6 +50,3 @@ class ProcessCloudStorage(BrowserView):
         """
         adapter = ICloudStorage(self.context)
         adapter.enqueue()
-
-    def test_celery(self):
-        test_task.apply_async()
