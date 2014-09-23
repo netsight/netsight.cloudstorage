@@ -19,7 +19,6 @@ from boto.s3.connection import S3Connection
 
 from .tasks import upload_to_s3, upload_callback
 from .interfaces import ICloudStorage
-from .config import BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 logger = logging.getLogger("netsight.cloudstorage")
 DATA_KEY = 'cloudstorage_data'
@@ -162,9 +161,14 @@ class CloudStorage(object):
         :rtype: str
         """
         storage = self._getStorage()
+        aws_key = get_value_from_registry('aws_access_key')
+        aws_secret_key = get_value_from_registry('aws_secret_access_key')
+        bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
+            'bucket_name'
+        )
         if fieldname in storage['cloud_available'].keys():
-            s3 = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-            bucket_name = 'netsight.cloudstorage.%s' % BUCKET_NAME
+            s3 = S3Connection(aws_key, aws_secret_key)
+            bucket_name = 'netsight-cloudstorage-%s' % bucket_name
             bucket = s3.lookup(bucket_name)
             if bucket is None:
                 logger.warn('Bucket %s does not exist', bucket_name)
