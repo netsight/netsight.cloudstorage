@@ -33,6 +33,7 @@ class CloudStorageProcessing(BrowserView):
         return adapter.get_data_for(fieldname)
 
     def callback(self):
+        # TODO: Change this to fire an event and register handlers
         if not self.valid_request():
             self.request.response.setStatus(403)
             return 'Error'
@@ -40,6 +41,7 @@ class CloudStorageProcessing(BrowserView):
         adapter = ICloudStorage(self.context)
         logger.info('Celery says %s has been uploaded', fieldname)
         adapter.mark_as_cloud_available(fieldname)
+
 
 
 class ProcessCloudStorage(BrowserView):
