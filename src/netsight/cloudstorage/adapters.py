@@ -112,8 +112,13 @@ class CloudStorage(object):
         """ Dispatch any relevant file fields off to Celery """
 
         logger.info('enqueue called for %s' % self.context.absolute_url())
+        in_progress = self._getStorage()['in_progress']
+        cloud_available = self._getStorage()['cloud_available']
 
         for field in self._getFields():
+            if field['name'] in cloud_available.keys():
+                in_progress.pop(field['name'], None)
+                continue
             min_size = get_value_from_registry('min_file_size')
             if field['size'] < min_size * 1024 * 1024:
                 logger.info('File on field %s is too small (< %sMB)',
@@ -124,7 +129,6 @@ class CloudStorage(object):
             # if mimetype not in VALID_FORMATS:
             #     continue
 
-            in_progress = self._getStorage()['in_progress']
             # unique token for this job
             security_token = uuid4().hex
             in_progress[field['name']] = security_token
