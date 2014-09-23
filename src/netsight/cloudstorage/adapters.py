@@ -64,8 +64,12 @@ class CloudStorage(object):
                         'size': field.get_size(self.context),
                     })
         else:
-            from plone.dexterity.interfaces import IDexterityFTI
-            from plone.namedfile.interfaces import INamedBlobFile
+            try:
+                from plone.dexterity.interfaces import IDexterityFTI
+                from plone.namedfile.interfaces import INamedBlobFile
+            except ImportError:
+                return result
+
             # could be dexterity
             schema = getUtility(IDexterityFTI,
                                 name=unwrapped.portal_type).lookupSchema()
