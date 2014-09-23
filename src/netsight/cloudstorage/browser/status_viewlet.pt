@@ -1,8 +1,12 @@
-<div i18n:domain="netsight.cloudstorage"
+<dl class="portalMessage info"
+    i18n:domain="netsight.cloudstorage"
     tal:condition="view/available">
-  <span tal:content="view/status_message">Foo</span>
-  <span tal:condition="view/upload_possible">
-    <a href=""
-       tal:attributes="href view/processing_url">Click here to do so now</a>
-  </span>
-</div>
+  <dt>Info</dt>
+  <dd>
+    <span tal:content="view/status_message">Status message</span>
+    <span tal:condition="view/upload_possible">
+        <a href=""
+           tal:attributes="href view/processing_url">Click here to do so now</a>
+    </span>
+  </dd>
+</dl>
