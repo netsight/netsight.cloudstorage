@@ -107,6 +107,7 @@ class CloudStorage(object):
         storage = self._getStorage()
         storage['in_progress'].pop(fieldname)
         storage['cloud_available'][fieldname] = True
+        transaction.commit()
 
     def enqueue(self):
         """ Dispatch any relevant file fields off to Celery """
