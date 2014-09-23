@@ -1,7 +1,9 @@
 import logging
 
 from Products.Five import BrowserView
-from netsight.cloudstorage.interfaces import ICloudStorage
+from plone import api
+
+from ..interfaces import ICloudStorage
 
 logger = logging.getLogger('netsight.cloudstorage')
 
@@ -41,6 +43,21 @@ class CloudStorageProcessing(BrowserView):
         logger.info('Celery says %s has been uploaded', fieldname)
         adapter.mark_as_cloud_available(fieldname)
 
+        if not adapter.has_uploaded_all_files():
+            return
+
+        creator = api.user.get(self.context.Creator())
+        creator_email = creator.getProperty('email')
+        subject = 'Files for %s have been uploaded' % self.context.Title()
+        body ="""The files of %s at %s have been uploaded to cloud storage.
+
+From now on when someone views this content, the large files will be served up from cloud storage
+""" % (self.context.Title(), self.context.absolute_url())
+        api.portal.send_email(
+            recipient=creator_email,
+            subject=subject,
+            body=body,
+        )
 
 
 class ProcessCloudStorage(BrowserView):
