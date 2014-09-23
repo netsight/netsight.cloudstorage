@@ -22,14 +22,6 @@
       />
 
   <browser:page
-      name="celery-test"
-      for="*"
-      class=".views.ProcessCloudStorage"
-      attribute="test_celery"
-      permission="zope.Public"
-      />
-
-  <browser:page
       name="manual-processing"
       for="*"
       class=".views.ProcessCloudStorage"
