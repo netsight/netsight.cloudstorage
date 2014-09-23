@@ -37,4 +37,13 @@
       permission="zope.Public"
       />
 
+  <browser:viewlet
+      name="netsight.cloudstorage.status_viewlet"
+      for="*"
+      class=".viewlets.StatusViewlet"
+      view="plone.app.layout.globals.interfaces.IViewView"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+      permission="cmf.ModifyPortalContent"
+      />
+
 </configure>

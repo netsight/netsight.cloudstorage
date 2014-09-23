@@ -85,6 +85,14 @@ class CloudStorage(object):
     def valid_fieldnames(self):
         return [x['name'] for x in self._getFields()]
 
+    def has_in_progress_uploads(self):
+        storage = self._getStorage()
+        return len(storage['in_progress'].keys()) > 0
+
+    def has_uploaded_all_fields(self):
+        storage = self._getStorage()
+        return set(self.valid_fieldnames()) == set(storage['cloud_available'].keys())
+
     def get_data_for(self, fieldname):
         field = self.context.getField(fieldname)
         if field is not None:
