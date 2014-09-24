@@ -57,6 +57,7 @@ class CloudStorage(object):
             schema = unwrapped.Schema()
             for field in schema.fields():
                 if field.type in ['file', 'blob']:
+                    # TODO: Put original filename here
                     result.append({
                         'name': field.getName(),
                         'context_uid': self.context.UID(),
@@ -77,6 +78,7 @@ class CloudStorage(object):
                 field = getattr(unwrapped, name)
                 if not INamedBlobFile.providedBy(field):
                     continue
+                # TODO: Put original filename here
                 result.append({
                     'name': name,
                     'context_uid': self.context.UID(),
@@ -157,19 +159,21 @@ class CloudStorage(object):
             logger.info('Queuing field %s to be uploaded',  field['name'])
             source_url = '%s/@@cloudstorage-retrieve' % root_url
             callback_url = '%s/@@cloudstorage-callback' % root_url
+            errorback_url = '%s/@@cloudstorage-error' % root_url
             bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
                 'bucket_name'
             )
             aws_key = get_value_from_registry('aws_access_key')
             aws_secret_key = get_value_from_registry('aws_secret_access_key')
             upload_task = upload_to_s3.s(
-                bucket_name,
-                source_url,
-                callback_url,
-                field,
-                security_token,
-                aws_key,
-                aws_secret_key
+                bucket_name=bucket_name,
+                source_url=source_url,
+                callback_url=callback_url,
+                errorback_url=errorback_url,
+                field=field,
+                security_token=security_token,
+                aws_key=aws_key,
+                aws_secret_key=aws_secret_key
             )
             upload_task.apply_async(link=upload_callback.s())
 

@@ -8,7 +8,7 @@ from boto import elastictranscoder
 from boto.gs.connection import Location
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-from celery import Celery
+from celery import Celery, Task
 import requests
 
 logger = logging.getLogger('netsight.cloudstorage.celery_tasks')
@@ -17,10 +17,31 @@ broker_url = 'redis://localhost:6379/0'
 app = Celery('netsight.cloudstorage.tasks', broker=broker_url)
 
 
-@app.task
+class S3Task(Task):
+    """
+    Subclass of Celery Task to add failure handling for dodgy S3 gubbins
+    """
+    abstract = True
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        field = kwargs['field']
+        security_token = kwargs['security_token']
+        source_url = kwargs.get('source_url', 'Unknown URL')
+        error_callback = kwargs.get('errorback_url')
+        logger.error('%s', einfo.traceback)
+        logger.error('While uploading %s.', source_url)
+        params = {
+            'identifier': field['name'],
+            'security_token': security_token
+        }
+        r = requests.get(error_callback, params=params)
+
+
+@app.task(base=S3Task)
 def upload_to_s3(bucket_name,
                  source_url,
                  callback_url,
+                 errorback_url,
                  field,
                  security_token,
                  aws_key,
@@ -30,6 +51,8 @@ def upload_to_s3(bucket_name,
 
 
 
+    :param errorback_url: URL to call if the task fails
+    :type errorback_url: str
     :param callback_url: URL to call once the upload has completed
     :type callback_url: str
     :param bucket_name: name of the bucket to upload to/create
@@ -48,7 +71,6 @@ def upload_to_s3(bucket_name,
     :rtype: tuple
     """
     s3 = S3Connection(aws_key, aws_secret_key)
-
     in_bucket = s3.lookup(bucket_name)
     if in_bucket is None:
         logger.warn(
