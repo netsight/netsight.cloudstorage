@@ -1,0 +1,28 @@
+From c4dfa8afa5b2fdb2e31771ee38fa614657b70f07 Mon Sep 17 00:00:00 2001
+Message-Id: <c4dfa8afa5b2fdb2e31771ee38fa614657b70f07.1411563272.git.benc@netsight.co.uk>
+In-Reply-To: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+References: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+From: Ben Cole <benc@netsight.co.uk>
+Date: Wed, 24 Sep 2014 13:39:59 +0100
+Subject: [PATCH 4/4] Fixed - typo
+
+---
+ src/netsight/cloudstorage/browser/views.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/netsight/cloudstorage/browser/views.py b/src/netsight/cloudstorage/browser/views.py
+index 5c1270f..69f203b 100644
+--- a/src/netsight/cloudstorage/browser/views.py
++++ b/src/netsight/cloudstorage/browser/views.py
+@@ -45,7 +45,7 @@ class CloudStorageProcessing(BrowserView):
+ 
+         # Only send email once all fields have been uploaded
+         # TODO: Configurable emails
+-        if not adapter.has_uploaded_all_files():
++        if not adapter.has_uploaded_all_fields():
+             return
+ 
+         creator = api.user.get(self.context.Creator())
+-- 
+2.1.0
+

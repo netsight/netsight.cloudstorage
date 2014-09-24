@@ -1,0 +1,28 @@
+From ed6f41fa88fa71f4eba5eebfbbc707e5640f61c3 Mon Sep 17 00:00:00 2001
+Message-Id: <ed6f41fa88fa71f4eba5eebfbbc707e5640f61c3.1411563272.git.benc@netsight.co.uk>
+In-Reply-To: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+References: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+From: Ben Cole <benc@netsight.co.uk>
+Date: Wed, 24 Sep 2014 13:39:44 +0100
+Subject: [PATCH 2/4] Fixed - Sometimes field is not in_progress
+
+---
+ src/netsight/cloudstorage/adapters.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/netsight/cloudstorage/adapters.py b/src/netsight/cloudstorage/adapters.py
+index a8e3103..6c6ca2f 100644
+--- a/src/netsight/cloudstorage/adapters.py
++++ b/src/netsight/cloudstorage/adapters.py
+@@ -111,7 +111,7 @@ class CloudStorage(object):
+ 
+     def mark_as_cloud_available(self, fieldname):
+         storage = self._getStorage()
+-        storage['in_progress'].pop(fieldname)
++        storage['in_progress'].pop(fieldname, None)
+         storage['cloud_available'][fieldname] = True
+         transaction.commit()
+ 
+-- 
+2.1.0
+

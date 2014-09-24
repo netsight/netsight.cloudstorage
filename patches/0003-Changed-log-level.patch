@@ -1,0 +1,28 @@
+From a852209e2b7509eb686b044a012d3f28ae12f535 Mon Sep 17 00:00:00 2001
+Message-Id: <a852209e2b7509eb686b044a012d3f28ae12f535.1411563272.git.benc@netsight.co.uk>
+In-Reply-To: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+References: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+From: Ben Cole <benc@netsight.co.uk>
+Date: Wed, 24 Sep 2014 13:39:51 +0100
+Subject: [PATCH 3/4] Changed - log level
+
+---
+ src/netsight/cloudstorage/adapters.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/netsight/cloudstorage/adapters.py b/src/netsight/cloudstorage/adapters.py
+index 6c6ca2f..925a84e 100644
+--- a/src/netsight/cloudstorage/adapters.py
++++ b/src/netsight/cloudstorage/adapters.py
+@@ -127,7 +127,7 @@ class CloudStorage(object):
+         :type enforce_file_size: bool
+         """
+ 
+-        logger.info('enqueue called for %s' % self.context.absolute_url())
++        logger.debug('enqueue called for %s' % self.context.absolute_url())
+         in_progress = self._getStorage()['in_progress']
+         cloud_available = self._getStorage()['cloud_available']
+ 
+-- 
+2.1.0
+

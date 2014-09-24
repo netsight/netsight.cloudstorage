@@ -1,0 +1,27 @@
+From 12559672c4b6d959460242c97cdb7b6245fa1429 Mon Sep 17 00:00:00 2001
+Message-Id: <12559672c4b6d959460242c97cdb7b6245fa1429.1411563272.git.benc@netsight.co.uk>
+From: Ben Cole <benc@netsight.co.uk>
+Date: Wed, 24 Sep 2014 13:39:26 +0100
+Subject: [PATCH 1/4] Fixed - always upload in case of overwriting
+
+---
+ src/netsight/cloudstorage/adapters.py | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/netsight/cloudstorage/adapters.py b/src/netsight/cloudstorage/adapters.py
+index 3a54cbd..a8e3103 100644
+--- a/src/netsight/cloudstorage/adapters.py
++++ b/src/netsight/cloudstorage/adapters.py
+@@ -132,9 +132,6 @@ class CloudStorage(object):
+         cloud_available = self._getStorage()['cloud_available']
+ 
+         for field in self._getFields():
+-            if field['name'] in cloud_available.keys():
+-                in_progress.pop(field['name'], None)
+-                continue
+             min_size = get_value_from_registry('min_file_size')
+             # TODO: Move this out for bulk uploading, not manual
+             if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
+-- 
+2.1.0
+
