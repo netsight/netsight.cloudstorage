@@ -11,4 +11,4 @@ def file_field_download(self, instance, **kwargs):
     url = adapter.get_url(fieldname)
     if url is not None:
         return instance.REQUEST.RESPONSE.redirect(url)
-    return self._old_download(self, instance, **kwargs)
+    return self._old_download(instance, **kwargs)
