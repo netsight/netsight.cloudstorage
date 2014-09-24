@@ -46,7 +46,6 @@ setup(
         'boto',
         'requests',
         'collective.monkeypatcher',
-        'tinys3',
     ],
     extras_require={'test': [
         'plone.app.testing',
