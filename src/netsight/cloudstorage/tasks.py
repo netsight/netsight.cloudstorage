@@ -123,15 +123,6 @@ def upload_callback(args):
     requests.get(callback_url, params=params)
 
 
-@app.task
-def upload_failed():
-    """
-    TODO: http://celery.readthedocs.org/en/latest/userguide/calling.html
-    Error callback if upload should fail
-    """
-    pass
-
-
 @app.task()
 def transcode_video():
     transcoder = elastictranscoder.connect_to_region('eu-west-1')
@@ -155,8 +146,3 @@ def transcode_video():
                 "Warning": "",
                 "Error": "",
             })
-
-
-@app.task
-def test_task():
-    logger.info('Task triggered')
