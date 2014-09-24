@@ -113,8 +113,17 @@ class CloudStorage(object):
         storage['cloud_available'][fieldname] = True
         transaction.commit()
 
-    def enqueue(self):
-        """ Dispatch any relevant file fields off to Celery """
+    def remove_from_in_progress(self, fieldname):
+        storage = self._getStorage()
+        storage['in_progress'].pop(fieldname)
+        transaction.commit()
+
+    def enqueue(self, enforce_file_size=True):
+        """ Dispatch any relevant file fields off to Celery
+        :param enforce_file_size: Allow manually uploading files smaller than the
+                                  configured minimum
+        :type enforce_file_size: bool
+        """
 
         logger.info('enqueue called for %s' % self.context.absolute_url())
         in_progress = self._getStorage()['in_progress']
@@ -125,7 +134,8 @@ class CloudStorage(object):
                 in_progress.pop(field['name'], None)
                 continue
             min_size = get_value_from_registry('min_file_size')
-            if field['size'] < min_size * 1024 * 1024:
+            # TODO: Move this out for bulk uploading, not manual
+            if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
                 logger.info('File on field %s is too small (< %sMB)',
                              field['name'],
                              min_size)
