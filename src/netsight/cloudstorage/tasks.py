@@ -1,8 +1,11 @@
 """
 Celery task definitions for netsight.cloudstorage
 """
+from io import BytesIO
 import logging
 from StringIO import StringIO
+import math
+import sys
 
 from boto import elastictranscoder
 from boto.gs.connection import Location
@@ -91,14 +94,22 @@ def upload_to_s3(bucket_name,
     }
     #TODO: Stream file download
     r = requests.get(source_url, params=params)
-    file_data = StringIO(r.content)
+    file_data = BytesIO(r.content)
+    file_size = sys.getsizeof(r.content)
+    chunk_size = 10 * 1024 * 1024  # 1MB chunk size
+    chunk_count = int(math.ceil(file_size / chunk_size))
+    multipart = in_bucket.initiate_multipart_upload(dest_filename)
 
     logger.info(
         'Uploading some data to %s with key: %s' %
         (in_bucket.name, k.key)
     )
-    #TODO: Chunky monkey uploads
-    k.set_contents_from_file(file_data)
+    for i in range(chunk_count + 1):
+        offset = chunk_size * i
+        num_bytes = min(chunk_size, file_size - offset)
+        with BytesIO(file_data.read(num_bytes)) as chunk:
+            multipart.upload_part_from_file(chunk, part_num=i+1)
+    multipart.complete_upload()
 
     logger.info('Upload complete')
     # Returning the params here so they can be used in the callback
