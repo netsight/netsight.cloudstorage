@@ -22,6 +22,14 @@
       />
 
   <browser:page
+      name="cloudstorage-error"
+      for="*"
+      class=".views.CloudStorageProcessing"
+      attribute="error_callback"
+      permission="zope.Public"
+      />
+
+  <browser:page
       name="manual-processing"
       for="*"
       class=".views.ProcessCloudStorage"

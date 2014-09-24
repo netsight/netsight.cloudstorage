@@ -43,6 +43,8 @@ class CloudStorageProcessing(BrowserView):
         logger.info('Celery says %s has been uploaded', fieldname)
         adapter.mark_as_cloud_available(fieldname)
 
+        # Only send email once all fields have been uploaded
+        # TODO: Configurable emails
         if not adapter.has_uploaded_all_files():
             return
 
@@ -58,6 +60,19 @@ From now on when someone views this content, the large files will be served up f
             subject=subject,
             body=body,
         )
+
+    def error_callback(self):
+        """
+        Callback view if there was an error
+        """
+        if not self.valid_request():
+            self.request.response.setStatus(403)
+            return 'Error'
+        fieldname = self.request.get('identifier')
+        adapter = ICloudStorage(self.context)
+        logger.warn('Celery encountered and error whilst trying to upload %s. '
+                    'See Celery logs for more details.', fieldname)
+        adapter.remove_from_in_progress(fieldname)
 
 
 class ProcessCloudStorage(BrowserView):
