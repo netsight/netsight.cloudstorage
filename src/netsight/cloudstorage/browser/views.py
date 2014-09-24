@@ -66,4 +66,5 @@ class ProcessCloudStorage(BrowserView):
         View to manually trigger processing
         """
         adapter = ICloudStorage(self.context)
-        adapter.enqueue()
+        adapter.enqueue(enforce_file_size=False)
+        # TODO: Redirect to self.context.absolute_url()
