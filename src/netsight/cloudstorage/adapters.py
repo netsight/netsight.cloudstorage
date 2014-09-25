@@ -193,7 +193,6 @@ class CloudStorage(object):
         )
         if fieldname in storage['cloud_available'].keys():
             s3 = S3Connection(aws_key, aws_secret_key)
-            bucket_name = 'netsight-cloudstorage-%s' % bucket_name
             bucket = s3.lookup(bucket_name)
             if bucket is None:
                 logger.warn('Bucket %s does not exist', bucket_name)
