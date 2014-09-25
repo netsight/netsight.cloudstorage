@@ -82,4 +82,6 @@ class ProcessCloudStorage(BrowserView):
         """
         adapter = ICloudStorage(self.context)
         adapter.enqueue(enforce_file_size=False)
-        # TODO: Redirect to self.context.absolute_url()
+        api.portal.show_message(message='Upload initiated',
+                                request=self.request)
+        return self.request.response.redirect(self.context.absolute_url())
