@@ -47,7 +47,7 @@ class CloudStorage(object):
             storage['in_progress'] = PersistentDict()
         return annotations[DATA_KEY]
 
-    def _getFields(self):
+    def _getFields(self, ignore_empty=True):
         """ Get an iterable of the file-like fields for context """
         result = []
 
@@ -83,7 +83,11 @@ class CloudStorage(object):
                     'name': name,
                     'context_uid': self.context.UID(),
                     'mimetype': field.contentType,
+                    'size': field.size,
                 })
+
+        if ignore_empty:
+            result = [x for x in result if x['size'] > 0]
 
         return result
 
