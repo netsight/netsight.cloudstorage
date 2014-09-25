@@ -136,16 +136,17 @@ class CloudStorage(object):
         cloud_available = self._getStorage()['cloud_available']
 
         for field in self._getFields():
+            if not field['size'] > 0:
+                # Ignore empty fields
+                continue
+
             min_size = get_value_from_registry('min_file_size')
             # TODO: Move this out for bulk uploading, not manual
             if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
                 logger.info('File on field %s is too small (< %sMB)',
-                             field['name'],
-                             min_size)
+                            field['name'],
+                            min_size)
                 continue
-            # TODO: Find and define "valid formats"
-            # if mimetype not in VALID_FORMATS:
-            #     continue
 
             # unique token for this job
             security_token = uuid4().hex
