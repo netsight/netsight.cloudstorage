@@ -4,7 +4,14 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Switch to chunked uploads
+  [benc]
+- Fix bug with download patch
+  [mattss]
+- Add correct filename and mimetype to url generator
+  [mattss]
+- Add manual upload trigger view
+  [benc]
 
 
 1.0 (2014-09-23)
