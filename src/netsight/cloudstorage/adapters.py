@@ -63,6 +63,7 @@ class CloudStorage(object):
                         'context_uid': self.context.UID(),
                         'mimetype': field.getContentType(self.context),
                         'size': field.get_size(self.context),
+                        'filename': field.getFilename(self.context),
                     })
         else:
             try:
@@ -84,12 +85,20 @@ class CloudStorage(object):
                     'context_uid': self.context.UID(),
                     'mimetype': field.contentType,
                     'size': field.size,
+                    'filename': field.filename,
                 })
 
         if ignore_empty:
             result = [x for x in result if x['size'] > 0]
 
         return result
+
+    def field_info(self, fieldname):
+        """ Look up the field data for a single field """
+        fields = self._getFields()
+        for info in fields:
+            if fieldname == info['name']:
+                return info
 
     def valid_fieldnames(self):
         return [x['name'] for x in self._getFields()]
@@ -199,9 +208,14 @@ class CloudStorage(object):
                 return None
             key = Key(bucket)
             key.key = '%s-%s' % (fieldname, self.context.UID())
-            return key.generate_url(60)
+            response_headers = {}
+            fieldinfo = self.field_info(fieldname)
+            if fieldinfo:
+                response_headers['response-content-disposition'] = \
+                    'attachment; filename="%s"' % fieldinfo['filename']
+                response_headers['response-content-type'] = \
+                    fieldinfo['mimetype']
+            return key.generate_url(60, response_headers=response_headers)
         else:
             logger.warn('Field %s is not yet available in cloudstorage',
                         fieldname)
-        return None
-
