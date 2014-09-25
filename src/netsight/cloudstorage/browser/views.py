@@ -45,7 +45,7 @@ class CloudStorageProcessing(BrowserView):
 
         # Only send email once all fields have been uploaded
         # TODO: Configurable emails
-        if not adapter.has_uploaded_all_files():
+        if not adapter.has_uploaded_all_fields():
             return
 
         creator = api.user.get(self.context.Creator())
