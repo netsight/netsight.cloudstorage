@@ -48,13 +48,25 @@ class CloudStorageProcessing(BrowserView):
         if not adapter.has_uploaded_all_fields():
             return
 
+        portal = api.portal.get()
         creator = api.user.get(self.context.Creator())
         creator_email = creator.getProperty('email')
-        subject = 'Files for %s have been uploaded' % self.context.Title()
-        body ="""The files of %s at %s have been uploaded to cloud storage.
+        subject = u'%s: Files for %s have been uploaded' % (
+            portal.Title().decode('utf8', 'ignore'),
+            self.context.Title().decode('utf8', 'ignore'),
+        )
+        body = """This is an automated email.
 
-From now on when someone views this content, the large files will be served up from cloud storage
-""" % (self.context.Title(), self.context.absolute_url())
+File data for the following item has been successfully
+uploaded to secure cloud storage:
+
+%s (%s)
+%s
+""" % (
+            self.context.Title(),
+            self.context.Type(),
+            self.context.absolute_url()
+        )
         api.portal.send_email(
             recipient=creator_email,
             subject=subject,
