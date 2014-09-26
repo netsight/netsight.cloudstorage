@@ -24,10 +24,10 @@ class StatusViewlet(ViewletBase):
             return _(u'File data for this item is currently being uploaded '
                      u'to secure cloud storage')
         elif self.adapter.has_uploaded_all_fields():
-            return _(u'File data for this item is being served from'
+            return _(u'File data for this item is being served from '
                      u'secure cloud storage')
         else:
-            return _(u'File data for this item can be uploaded to'
+            return _(u'File data for this item can be uploaded to '
                      u'secure cloud storage')
 
     def upload_possible(self):
