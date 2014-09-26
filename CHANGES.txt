@@ -4,7 +4,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- General help text updates
+  [mattss]
+- Clear cloud storage setting when re-queued
+  [mattss]
 
 
 1.1 (2014-09-25)
