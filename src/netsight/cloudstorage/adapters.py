@@ -157,6 +157,9 @@ class CloudStorage(object):
                             min_size)
                 continue
 
+            # Remove existing cloud info, assuming file data has changed
+            cloud_available[field['name']] = False
+
             # unique token for this job
             security_token = uuid4().hex
             in_progress[field['name']] = security_token
