@@ -51,7 +51,7 @@ class CloudStorageProcessing(BrowserView):
         portal = api.portal.get()
         creator = api.user.get(self.context.Creator())
         creator_email = creator.getProperty('email')
-        subject = u'%s: Files for %s have been uploaded' % (
+        subject = u'%s: Files for "%s" have been uploaded' % (
             portal.Title().decode('utf8', 'ignore'),
             self.context.Title().decode('utf8', 'ignore'),
         )
