@@ -6,7 +6,7 @@
     <span tal:content="view/status_message">Status message</span>
     <span tal:condition="view/upload_possible">
         <a href=""
-           tal:attributes="href view/processing_url">Click here to do so now</a>
+           tal:attributes="href view/processing_url">Start manual upload</a>
     </span>
   </dd>
 </dl>
