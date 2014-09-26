@@ -7,7 +7,7 @@
 
   <browser:page
       name="cloudstorage-retrieve"
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       class=".views.CloudStorageProcessing"
       attribute="retrieve"
       permission="zope.Public"
@@ -15,7 +15,7 @@
 
   <browser:page
       name="cloudstorage-callback"
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       class=".views.CloudStorageProcessing"
       attribute="callback"
       permission="zope.Public"
@@ -23,7 +23,7 @@
 
   <browser:page
       name="cloudstorage-error"
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       class=".views.CloudStorageProcessing"
       attribute="error_callback"
       permission="zope.Public"
@@ -31,7 +31,7 @@
 
   <browser:page
       name="manual-processing"
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       class=".views.ProcessCloudStorage"
       attribute="manual_processing"
       permission="zope.Public"
@@ -39,7 +39,7 @@
 
   <browser:viewlet
       name="netsight.cloudstorage.status_viewlet"
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       class=".viewlets.StatusViewlet"
       view="plone.app.layout.globals.interfaces.IViewView"
       manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"

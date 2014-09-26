@@ -36,8 +36,9 @@
       description="Installs the netsight.cloudstorage package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
   <adapter
-      for="*"
+      for="Products.CMFCore.interfaces.IContentish"
       provides=".interfaces.ICloudStorage"
       factory=".adapters.CloudStorage"
       />
@@ -51,7 +52,7 @@
 
   <subscriber
       for="Products.CMFCore.interfaces.IContentish
-          zope.lifecycleevent.IObjectModifiedEvent"
+           zope.lifecycleevent.IObjectModifiedEvent"
       handler=".subscribers.content_saved"
       />
 
