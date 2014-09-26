@@ -160,7 +160,8 @@ class CloudStorage(object):
                 continue
 
             # Remove existing cloud info, assuming file data has changed
-            cloud_available[field['name']] = False
+            if field['name'] in cloud_available:
+                del cloud_available[field['name']]
 
             # unique token for this job
             security_token = uuid4().hex
