@@ -109,7 +109,8 @@ class CloudStorage(object):
 
     def has_uploaded_all_fields(self):
         storage = self._getStorage()
-        return set(self.valid_fieldnames()) == set(storage['cloud_available'].keys())
+        return set(self.valid_fieldnames()) == \
+            set(storage['cloud_available'].keys())
 
     def get_data_for(self, fieldname):
         field = self.context.getField(fieldname)
@@ -135,7 +136,8 @@ class CloudStorage(object):
 
     def enqueue(self, enforce_file_size=True):
         """ Dispatch any relevant file fields off to Celery
-        :param enforce_file_size: Allow manually uploading files smaller than the
+        :param enforce_file_size: Allow manually uploading files
+                                  smaller than the
                                   configured minimum
         :type enforce_file_size: bool
         """
