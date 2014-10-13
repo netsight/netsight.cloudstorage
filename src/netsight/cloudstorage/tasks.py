@@ -3,7 +3,6 @@ Celery task definitions for netsight.cloudstorage
 """
 from io import BytesIO
 import logging
-from StringIO import StringIO
 import math
 import sys
 
