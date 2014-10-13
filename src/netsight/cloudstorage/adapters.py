@@ -98,7 +98,10 @@ class CloudStorage(object):
         return result
 
     def field_info(self, fieldname):
-        """ Look up the field data for a single field """
+        """ Look up the field data for a single field
+
+        :param fieldname: Name of the field to lookup
+        """
         fields = self._getFields()
         for info in fields:
             if fieldname == info['name']:
