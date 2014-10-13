@@ -26,6 +26,10 @@ class S3Task(Task):
     abstract = True
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
+        """
+        Override default celery task failure handling to ensure required data
+        is passed around
+        """
         field = kwargs['field']
         security_token = kwargs['security_token']
         source_url = kwargs.get('source_url', 'Unknown URL')
@@ -36,7 +40,7 @@ class S3Task(Task):
             'identifier': field['name'],
             'security_token': security_token
         }
-        r = requests.get(error_callback, params=params)
+        requests.get(error_callback, params=params)
 
 
 @app.task(base=S3Task)
@@ -91,10 +95,10 @@ def upload_to_s3(bucket_name,
         'identifier': field['name'],
         'security_token': security_token
     }
-    #TODO: Stream file download
+    # TODO: Stream file download
     r = requests.get(source_url, params=params)
     file_data = BytesIO(r.content)
-    file_size = sys.getsizeof(r.content)
+    file_size = sys.getsizeof(r.content, 0)
     chunk_size = 10 * 1024 * 1024  # 1MB chunk size
     chunk_count = int(math.ceil(file_size / chunk_size))
     multipart = in_bucket.initiate_multipart_upload(dest_filename)
