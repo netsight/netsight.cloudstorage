@@ -199,7 +199,15 @@ class CloudStorage(object):
                 aws_key=aws_key,
                 aws_secret_key=aws_secret_key
             )
-            upload_task.apply_async(link=upload_callback.s())
+            logger.info('File mimetype: %s', field['mimetype'])
+            if field['mimetype'].startswith('video'):
+                links = group(upload_callback.s(),
+                              transcode_video.s(),
+                              transcode_callback.s())
+            else:
+                links = group(upload_callback.s())
+            upload_task.link(links)
+            upload_task.apply_async()
 
     def get_url(self, fieldname):
         """
