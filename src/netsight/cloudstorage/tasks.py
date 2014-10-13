@@ -116,25 +116,36 @@ def upload_to_s3(bucket_name,
 
     logger.info('Upload complete')
     # Returning the params here so they can be used in the callback
-    return params, callback_url
+    retval = {
+        'params': params,
+        'callback_url': callback_url,
+        'dest_filename': dest_filename,
+        'aws_key': aws_key,
+        'aws_secret_key': aws_secret_key,
+        'bucket_name': bucket_name,
+    }
+    return retval
 
 
 @app.task
-def upload_callback(args):
+def upload_callback(upload_result):
     """
     When a file is successfully uploaded to S3, alert Plone to this fact
 
-    :param args: The callback_url and the params required to validate it
-    :type args: tuple
+    :param upload_result: The callback_url and the params required to validate
+                          it
+    :type upload_result: dict
     """
-    params = args[0]
-    callback_url = args[1]
+    params = upload_result['params']
+    callback_url = upload_result['callback_url']
     logger.info(
         'Calling %s to alert Plone that %s is uploaded',
         callback_url,
         params['identifier']
     )
+    params['activity'] = 'upload'
     requests.get(callback_url, params=params)
+    return upload_result
 
 
 @app.task()
