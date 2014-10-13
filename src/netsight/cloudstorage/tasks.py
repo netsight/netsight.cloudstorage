@@ -149,25 +149,74 @@ def upload_callback(upload_result):
 
 
 @app.task()
-def transcode_video():
-    transcoder = elastictranscoder.connect_to_region('eu-west-1')
-    pipelines = transcoder.list_pipelines()
-    if 'Pipelines' in pipelines and len(pipelines['Pipelines']) > 0:
-        pipeline = [
-            x for x in pipelines['Pipelines'] if
-            'awstest-transcoder' in x['Name']
-        ][0]
+def transcode_video(upload_result):
+    """
+    If the uploaded file is a video, then trigger a transcoding job.
+
+    :param upload_result: The result of the previous celery task (upload_to_s3)
+    """
+    aws_key = upload_result['aws_key']
+    aws_secret_key = upload_result['aws_secret_key']
+    in_bucket = upload_result['bucket_name']
+    out_bucket = '%s-transcoded' % in_bucket
+    source_file = upload_result['dest_filename']
+    # Pipeline name has a 40 char limit, but we may need to make this
+    # configurable later
+    pipeline_name = 'ns-cloudstorage-pipeline'
+
+    # Create out bucket if it doesn't exist
+    s3 = S3Connection(aws_key, aws_secret_key)
+    if s3.lookup(out_bucket) is None:
+        logger.warn(
+            'No bucket with name %s exists, creating a new one' %
+            out_bucket
+        )
+        s3.create_bucket(out_bucket, location=Location.EU)
+
+    transcoder = elastictranscoder.connect_to_region(
+        'eu-west-1',
+        aws_access_key_id=aws_key,
+        aws_secret_access_key=aws_secret_key
+    )
+    pipelines = {
+        x.get('Name'): x.get('Id')
+        for x in transcoder.list_pipelines().get('Pipelines', [])
+    }
+    if pipeline_name in pipelines:
+        pipeline_id = pipelines[pipeline_name]
     else:
-        pipeline_name = "awstest-pipeline"
-        print "Creating new pipeline with name: " + pipeline_name
+        logger.warning('Creating new pipeline with name: %s', pipeline_name)
         pipeline = transcoder.create_pipeline(
-            'awstest-pipeline',
-            in_bucket.name,
-            out_bucket.name,
+            pipeline_name,
+            in_bucket,
+            out_bucket,
             role='arn:aws:iam::377178956182:role/Transcoding',
             notifications={
-                "Progressing": "",
-                "Completed": "",
-                "Warning": "",
-                "Error": "",
-            })
+                'Progressing': '',
+                'Completed': '',
+                'Warning': '',
+                'Error': ''
+            }
+        )
+        pipeline_id = pipeline['Pipeline']['Id']
+
+    logger.info('Creating transcoding job for %s', source_file)
+    transcode_input = {
+        'Key': source_file,
+        'FrameRate': 'auto',
+        'Resolution': 'auto',
+        'AspectRatio': 'auto',
+        'Interlaced': 'auto',
+        'Container': 'auto'
+    }
+    transcode_output = {
+        # This preset is a standard one
+        'PresetId': '1351620000001-000020',
+        'Key': source_file
+    }
+    transcoder.create_job(
+        pipeline_id=pipeline_id,
+        input_name=transcode_input,
+        output=transcode_output
+    )
+    return upload_result
