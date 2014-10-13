@@ -220,3 +220,24 @@ def transcode_video(upload_result):
         output=transcode_output
     )
     return upload_result
+
+
+@app.task
+def transcode_callback(transcode_result):
+    """
+    When a file is successfully uploaded to S3, alert Plone to this fact
+
+    :param transcode_result: The callback_url and the params required to
+                             validate it
+    :type transcode_result: dict
+    """
+    params = transcode_result['params']
+    callback_url = transcode_callback['callback_url']
+    logger.info(
+        'Calling %s to alert Plone that %s is being transcoded',
+        callback_url,
+        params['identifier']
+    )
+    params['activity'] = 'transcode'
+    requests.get(callback_url, params=params)
+    return transcode_result
