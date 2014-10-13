@@ -7,8 +7,9 @@ from uuid import uuid4
 from BTrees.OOBTree import OOBTree
 from Products.CMFCore.interfaces import IContentish
 import transaction
-from netsight.cloudstorage.utils import get_value_from_config, \
-    get_value_from_registry
+from celery import group
+from netsight.cloudstorage.utils import get_value_from_config
+from netsight.cloudstorage.utils import get_value_from_registry
 from persistent.dict import PersistentDict
 from zope.annotation import IAnnotations
 from zope.component import adapts, getUtility
@@ -17,7 +18,10 @@ from zope.interface import implements
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 
-from .tasks import upload_to_s3, upload_callback
+from .tasks import upload_to_s3
+from .tasks import upload_callback
+from .tasks import transcode_video
+from .tasks import transcode_callback
 from .interfaces import ICloudStorage
 
 logger = logging.getLogger("netsight.cloudstorage")
