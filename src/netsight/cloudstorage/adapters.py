@@ -26,7 +26,6 @@ from .interfaces import ICloudStorage
 
 logger = logging.getLogger("netsight.cloudstorage")
 DATA_KEY = 'cloudstorage_data'
-port = get_value_from_config('instance_port')
 
 
 class CloudStorage(object):
@@ -178,7 +177,8 @@ class CloudStorage(object):
             transaction.commit()
 
             path = '/'.join(self.context.getPhysicalPath())
-            root_url = 'http://localhost:%s/%s' % (port, path)
+            plone_url = get_value_from_config('plone_url')
+            root_url = '%s/%s' % (plone_url, path)
 
             logger.info('Queuing field %s to be uploaded',  field['name'])
             source_url = '%s/@@cloudstorage-retrieve' % root_url
