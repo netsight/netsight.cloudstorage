@@ -15,7 +15,6 @@ from zope.annotation import IAnnotations
 from zope.component import adapts, getUtility
 from zope.interface import implements
 
-from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 
 from .tasks import upload_to_s3
@@ -214,34 +213,55 @@ class CloudStorage(object):
             upload_task.link(links)
             upload_task.apply_async()
 
-    def get_url(self, fieldname):
+    def get_url(self, fieldname, transcoded=False):
         """
         Get URL of fieldname from S3
+
+        :param fieldname: Name of the field on the adapted object
+        :type fieldname: str
+        :param transcoded: Whether or not to attempt to get a transcoded
+                           version of a video
         :return: URL on S3 of given field's content
         :rtype: str
         """
         storage = self._getStorage()
-        aws_key = get_value_from_registry('aws_access_key')
-        aws_secret_key = get_value_from_registry('aws_secret_access_key')
+        fieldinfo = self.field_info(fieldname)
+        if not fieldinfo:
+            logger.error('Field info missing from context %s', fieldname)
+            return
         bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
             'bucket_name'
         )
-        if fieldname in storage['cloud_available'].keys():
-            s3 = S3Connection(aws_key, aws_secret_key)
+        s3 = self._get_s3_connection()
+        response_headers = {}
+        key = None
+        if transcoded:
+            transcoded_bucket_name = '%s-transcoded' % bucket_name
+            bucket = s3.lookup(transcoded_bucket_name)
+            if bucket is not None:
+                # Check if it is available in the transcoded bucket
+                key = bucket.get_key(
+                    '%s-%s' % (fieldname, self.context.UID())
+                )
+            else:
+                logger.warn('Transcode bucket does not exist %s',
+                            transcoded_bucket_name)
+        if key is None:
             bucket = s3.lookup(bucket_name)
-            if bucket is None:
-                logger.warn('Bucket %s does not exist', bucket_name)
-                return None
-            key = Key(bucket)
-            key.key = '%s-%s' % (fieldname, self.context.UID())
-            response_headers = {}
-            fieldinfo = self.field_info(fieldname)
-            if fieldinfo:
-                response_headers['response-content-disposition'] = \
-                    'attachment; filename="%s"' % fieldinfo['filename']
-                response_headers['response-content-type'] = \
-                    fieldinfo['mimetype']
-            return key.generate_url(60, response_headers=response_headers)
-        else:
-            logger.warn('Field %s is not yet available in cloudstorage',
-                        fieldname)
+            if bucket is not None:
+                key = bucket.get_key(
+                    '%s-%s' % (fieldname, self.context.UID())
+                )
+                if key is None:
+                    logger.error('File not found: %s', fieldname)
+                    return
+            else:
+                logger.error('Bucket %s does not exist', bucket_name)
+                return
+            if not transcoded:
+                response_headers = {
+                    'response-content-disposition':
+                        'attachment; filename="%s"' % fieldinfo['filename'],
+                    'response-content-type': fieldinfo['mimetype']
+                }
+        return key.generate_url(60, response_headers=response_headers)
