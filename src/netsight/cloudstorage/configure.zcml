@@ -56,4 +56,13 @@
       handler=".subscribers.content_saved"
       />
 
+  <subscriber
+      for="netsight.cloudstorage.events.IUploadComplete"
+      handler=".subscribers.mark_uploaded"/>
+
+  <subscriber
+      for="netsight.cloudstorage.events.IUploadComplete"
+      handler=".subscribers.email_creator"
+      />
+
 </configure>

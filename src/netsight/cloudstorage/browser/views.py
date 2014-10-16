@@ -2,8 +2,11 @@ import logging
 
 from Products.Five import BrowserView
 from plone import api
+from zope.event import notify
 
 from ..interfaces import ICloudStorage
+from netsight.cloudstorage.events import UploadComplete
+from netsight.cloudstorage.events import TranscodeComplete
 
 logger = logging.getLogger('netsight.cloudstorage')
 
@@ -39,39 +42,13 @@ class CloudStorageProcessing(BrowserView):
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
-        adapter = ICloudStorage(self.context)
-        logger.info('Celery says %s has been uploaded', fieldname)
-        adapter.mark_as_cloud_available(fieldname)
-
-        # Only send email once all fields have been uploaded
-        # TODO: Configurable emails
-        if not adapter.has_uploaded_all_fields():
-            return
-
-        portal = api.portal.get()
-        creator = api.user.get(self.context.Creator())
-        creator_email = creator.getProperty('email')
-        subject = u'%s: Files for "%s" have been uploaded' % (
-            portal.Title().decode('utf8', 'ignore'),
-            self.context.Title().decode('utf8', 'ignore'),
-        )
-        body = """This is an automated email.
-
-File data for the following item has been successfully
-uploaded to secure cloud storage:
-
-%s (%s)
-%s
-""" % (
-            self.context.Title(),
-            self.context.Type(),
-            self.context.absolute_url()
-        )
-        api.portal.send_email(
-            recipient=creator_email,
-            subject=subject,
-            body=body,
-        )
+        activity = self.request.get('activity')
+        if activity == 'upload':
+            notify(UploadComplete(self.context, fieldname))
+        elif activity == 'transcode':
+            notify(TranscodeComplete(self.context, fieldname))
+        else:
+            logger.error('Unknown activity callback from Celery: %s', activity)
 
     def error_callback(self):
         """
