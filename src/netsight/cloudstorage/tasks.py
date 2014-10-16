@@ -232,7 +232,7 @@ def transcode_callback(transcode_result):
     :type transcode_result: dict
     """
     params = transcode_result['params']
-    callback_url = transcode_callback['callback_url']
+    callback_url = transcode_result['callback_url']
     logger.info(
         'Calling %s to alert Plone that %s is being transcoded',
         callback_url,
