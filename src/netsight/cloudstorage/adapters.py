@@ -144,6 +144,18 @@ class CloudStorage(object):
         storage['in_progress'].pop(fieldname)
         transaction.commit()
 
+    def has_transcoded_version(self, fieldname):
+        s3 = self._get_s3_connection()
+        bucket_name = 'netsight-cloudstorage-%s-transcoded' % \
+                      get_value_from_registry('bucket_name')
+        bucket = s3.lookup(bucket_name)
+        if bucket is None:
+            logger.warn('Transcoded bucket does not exist %s', bucket_name)
+            return
+        return bucket.get_key(
+            '%s-%s' % (fieldname, self.context.UID())
+        ) is not None
+
     def enqueue(self, enforce_file_size=True):
         """ Dispatch any relevant file fields off to Celery
         :param enforce_file_size: Allow manually uploading files
