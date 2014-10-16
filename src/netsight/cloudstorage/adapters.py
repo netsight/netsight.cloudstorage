@@ -96,6 +96,11 @@ class CloudStorage(object):
 
         return result
 
+    def _get_s3_connection(self):
+        aws_key = get_value_from_registry('aws_access_key')
+        aws_secret_key = get_value_from_registry('aws_secret_access_key')
+        return S3Connection(aws_key, aws_secret_key)
+
     def field_info(self, fieldname):
         """ Look up the field data for a single field
 
