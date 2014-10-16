@@ -81,7 +81,6 @@ class CloudStorage(object):
                 field = getattr(unwrapped, name)
                 if not INamedBlobFile.providedBy(field):
                     continue
-                # TODO: Put original filename here
                 result.append({
                     'name': name,
                     'context_uid': self.context.UID(),
@@ -101,7 +100,8 @@ class CloudStorage(object):
         return S3Connection(aws_key, aws_secret_key)
 
     def field_info(self, fieldname):
-        """ Look up the field data for a single field
+        """
+        Look up the field data for a single field
 
         :param fieldname: Name of the field to lookup
         """
@@ -111,18 +111,45 @@ class CloudStorage(object):
                 return info
 
     def valid_fieldnames(self):
+        """
+        Get a list of the fieldnames on the adapted object
+
+        :return: list of fieldnames
+        :rtype: list
+        """
         return [x['name'] for x in self._getFields()]
 
     def has_in_progress_uploads(self):
+        """
+        Check if the adapted object has any fields that are currently being
+        uploaded
+
+        :return: whether adapted object has uplaods in progress
+        :rtype: bool
+        """
         storage = self._getStorage()
         return len(storage['in_progress'].keys()) > 0
 
     def has_uploaded_all_fields(self):
+        """
+        Check if the adapted object has uploaded all its fields
+
+        :return: whether all the fields on the adapted object have been
+                 uploaded
+        :rtype: bool
+        """
         storage = self._getStorage()
         return set(self.valid_fieldnames()) == \
             set(storage['cloud_available'].keys())
 
     def get_data_for(self, fieldname):
+        """
+        Return the data stored within the field
+
+        :param fieldname: name of the field on the adapter object
+        :return: the byte data contained in the given field
+        :rtype: str
+        """
         field = self.context.getField(fieldname)
         if field is not None:
             return field.get(self.context)
@@ -130,21 +157,51 @@ class CloudStorage(object):
             return getattr(self.context, fieldname).data
 
     def security_token_for(self, fieldname):
+        """
+        Get the generated security token for the given field, for use by
+        callbacks
+
+        :param fieldname: the name of the field on the adapted object
+        :return: the security token
+        :rtype: str
+        """
         storage = self._getStorage()
         return storage['in_progress'].get(fieldname, None)
 
     def mark_as_cloud_available(self, fieldname):
+        """
+        Once an upload has completed this method should be called to mark the
+        field as uploaded to cloud storage on the annotation storage of the
+        adapted object
+
+        :param fieldname: name of the field on the adapted object to mark as
+                          uploaded
+        """
         storage = self._getStorage()
         storage['in_progress'].pop(fieldname)
         storage['cloud_available'][fieldname] = True
         transaction.commit()
 
     def remove_from_in_progress(self, fieldname):
+        """
+        If upload fails, this method should be called to remove the field from
+        the inprogress anontation
+
+        :param fieldname: name of the field on the adapted object
+        """
         storage = self._getStorage()
         storage['in_progress'].pop(fieldname)
         transaction.commit()
 
     def has_transcoded_version(self, fieldname):
+        """
+        Is there a trancoded version of the given field (video) available?
+
+        :param fieldname: name of the field on the adapted object
+        :return: whether a transcoded version of the field exists in cloud
+                 storage
+        :rtype: bool
+        """
         s3 = self._get_s3_connection()
         bucket_name = 'netsight-cloudstorage-%s-transcoded' % \
                       get_value_from_registry('bucket_name')
@@ -157,13 +214,13 @@ class CloudStorage(object):
         ) is not None
 
     def enqueue(self, enforce_file_size=True):
-        """ Dispatch any relevant file fields off to Celery
-        :param enforce_file_size: Allow manually uploading files
-                                  smaller than the
-                                  configured minimum
+        """
+        Dispatch any relevant file fields off to Celery
+
+        :param enforce_file_size: Allow manually uploading files smaller than
+                                  the configured minimum
         :type enforce_file_size: bool
         """
-
         logger.info('enqueue called for %s' % self.context.absolute_url())
         in_progress = self._getStorage()['in_progress']
         cloud_available = self._getStorage()['cloud_available']
@@ -196,7 +253,7 @@ class CloudStorage(object):
             plone_url = get_value_from_config('plone_url')
             root_url = '%s/%s' % (plone_url, path)
 
-            logger.info('Queuing field %s to be uploaded',  field['name'])
+            logger.info('Queuing field %s to be uploaded', field['name'])
             source_url = '%s/@@cloudstorage-retrieve' % root_url
             callback_url = '%s/@@cloudstorage-callback' % root_url
             errorback_url = '%s/@@cloudstorage-error' % root_url
