@@ -1,3 +1,6 @@
+"""
+Events specific to the Cloud Storage egg
+"""
 from zope.interface import implements
 from zope.interface import Interface
 from zope.interface import Attribute
@@ -5,19 +8,25 @@ from netsight.cloudstorage import MessageFactory as _
 
 
 class IUploadComplete(Interface):
-
+    """
+    Interface for UploadComplete Event
+    """
     context = Attribute(_(u'The object which the uploaded field is on'))
     fieldname = Attribute(_(u'The name of the field on context'))
 
 
 class ITranscodeComplete(Interface):
-
+    """
+    Interface for TranscodeComplete event
+    """
     context = Attribute(_(u'The object which the transcoded video is on'))
     fieldname = Attribute(_(u'The name of the field on context'))
 
 
 class IUploadFailed(Interface):
-
+    """
+    Interface for UploadFailed event
+    """
     context = Attribute(_(u'The object which the uploaded field is on'))
     fieldname = Attribute(_(u'The name of the field on context'))
 
