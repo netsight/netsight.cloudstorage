@@ -1,3 +1,6 @@
+"""
+Definition of Plone Control Panel settings for CloudStorage
+"""
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.z3cform import layout
@@ -5,7 +8,11 @@ from z3c.form import form
 
 from .interfaces import ICloudStorageSettings
 
+
 class CloudStorageControlPanelForm(RegistryEditForm):
+    """
+    CloudStorage settings form
+    """
     form.extends(RegistryEditForm)
     schema = ICloudStorageSettings
 
