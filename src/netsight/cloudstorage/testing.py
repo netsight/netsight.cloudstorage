@@ -23,7 +23,7 @@ class NetsightcloudstorageLayer(PloneSandboxLayer):
         )
 
         # Install products that use an old-style initialize() function
-        #z2.installProduct(app, 'Products.PloneFormGen')
+        # z2.installProduct(app, 'Products.PloneFormGen')
 
 #    def tearDownZope(self, app):
 #        # Uninstall products installed above

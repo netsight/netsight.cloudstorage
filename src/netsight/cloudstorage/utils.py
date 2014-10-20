@@ -17,7 +17,8 @@ def get_value_from_config(key):
     our_config = product_config.get('netsight.cloudstorage', None)
     if our_config is None:
         raise ConfigurationError(
-            'Unable to locate netsight.cloudstorage. Have you added it to buildout?')
+            'Unable to locate netsight.cloudstorage. Have you added it to '
+            'buildout?')
     retval = our_config.get(key, None)
     if retval is None:
         raise ConfigurationError('Unable to locate %s. Have you added it to '
