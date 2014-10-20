@@ -12,7 +12,10 @@ logger = logging.getLogger('netsight.cloudstorage')
 
 
 class CloudStorageProcessing(BrowserView):
-    def valid_request(self):
+    """
+    Browser view to allow celery to interact with Plone
+    """
+    def _valid_request(self):
         fieldname = self.request.get('identifier')
         adapter = ICloudStorage(self.context)
         if fieldname not in adapter.valid_fieldnames():
@@ -25,7 +28,14 @@ class CloudStorageProcessing(BrowserView):
         return True
 
     def retrieve(self):
-        if not self.valid_request():
+        """
+        View used by Celery to get the file data of the field specified in the
+        request to be uploaded to cloud storage
+
+        :return: the byte data stored in the field passed in the request
+        :rtype: str
+        """
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
@@ -37,8 +47,14 @@ class CloudStorageProcessing(BrowserView):
         return adapter.get_data_for(fieldname)
 
     def callback(self):
-        # TODO: Change this to fire an event and register handlers
-        if not self.valid_request():
+        """
+        Callback view to allow Celery to alert Plone of the state of uploading
+        or transcoding
+
+        :return: If unable to validate, return an error and 403 status
+        :rtype: HTTPResponse
+        """
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
@@ -54,7 +70,7 @@ class CloudStorageProcessing(BrowserView):
         """
         Callback view if there was an error
         """
-        if not self.valid_request():
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
@@ -65,6 +81,9 @@ class CloudStorageProcessing(BrowserView):
 
 
 class ProcessCloudStorage(BrowserView):
+    """
+    Browser view for Plone for interacting with Cloud Storage
+    """
     def manual_processing(self):
         """
         View to manually trigger processing
