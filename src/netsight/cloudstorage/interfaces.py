@@ -10,7 +10,9 @@ class ICloudStorage(Interface):
 
 
 class ICloudStorageSettings(Interface):
-
+    """
+    Cloud Storage settings interface
+    """
     aws_access_key = schema.TextLine(title=u'AWS Access Key')
     aws_secret_access_key = schema.TextLine(title=u'AWS Secret Access Key')
     bucket_name = schema.TextLine(title=u'S3 bucket name')
