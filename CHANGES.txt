@@ -4,7 +4,8 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added transcoding for video files
+  [benc]
 
 
 1.4 (2014-10-23)
