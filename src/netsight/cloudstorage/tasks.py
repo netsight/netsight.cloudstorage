@@ -181,10 +181,10 @@ def transcode_video(upload_result):
         aws_access_key_id=aws_key,
         aws_secret_access_key=aws_secret_key
     )
-    pipelines = {
-        x.get('Name'): x.get('Id')
+    pipelines = dict((
+        (x.get('Name'), x.get('Id'))
         for x in transcoder.list_pipelines().get('Pipelines', [])
-    }
+    ))
     if pipeline_name in pipelines:
         pipeline_id = pipelines[pipeline_name]
     else:
