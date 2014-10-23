@@ -1,3 +1,6 @@
+# -- The contents of this file is copyright (c) 2011 Netsight Internet     -- #
+# -- Solutions Ltd. All rights reserved. Please see COPYRIGHT.txt and      -- #
+# -- LICENCE.txt for further information.                                  -- #
 """
 Helper util
 """
@@ -17,7 +20,8 @@ def get_value_from_config(key):
     our_config = product_config.get('netsight.cloudstorage', None)
     if our_config is None:
         raise ConfigurationError(
-            'Unable to locate netsight.cloudstorage. Have you added it to buildout?')
+            'Unable to locate netsight.cloudstorage. Have you added it to '
+            'buildout?')
     retval = our_config.get(key, None)
     if retval is None:
         raise ConfigurationError('Unable to locate %s. Have you added it to '

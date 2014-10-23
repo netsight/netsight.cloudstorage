@@ -1,3 +1,6 @@
+# -- The contents of this file is copyright (c) 2011 Netsight Internet     -- #
+# -- Solutions Ltd. All rights reserved. Please see COPYRIGHT.txt and      -- #
+# -- LICENCE.txt for further information.                                  -- #
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
@@ -23,7 +26,7 @@ class NetsightcloudstorageLayer(PloneSandboxLayer):
         )
 
         # Install products that use an old-style initialize() function
-        #z2.installProduct(app, 'Products.PloneFormGen')
+        # z2.installProduct(app, 'Products.PloneFormGen')
 
 #    def tearDownZope(self, app):
 #        # Uninstall products installed above

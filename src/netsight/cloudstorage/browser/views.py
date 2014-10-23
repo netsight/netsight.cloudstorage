@@ -1,15 +1,27 @@
+# -- The contents of this file is copyright (c) 2011 Netsight Internet     -- #
+# -- Solutions Ltd. All rights reserved. Please see COPYRIGHT.txt and      -- #
+# -- LICENCE.txt for further information.                                  -- #
+"""
+Views for Cloud Storage
+"""
 import logging
 
 from Products.Five import BrowserView
 from plone import api
+from zope.event import notify
 
 from ..interfaces import ICloudStorage
+from netsight.cloudstorage.events import UploadComplete
+from netsight.cloudstorage.events import TranscodeComplete
 
 logger = logging.getLogger('netsight.cloudstorage')
 
 
 class CloudStorageProcessing(BrowserView):
-    def valid_request(self):
+    """
+    Browser view to allow celery to interact with Plone
+    """
+    def _valid_request(self):
         fieldname = self.request.get('identifier')
         adapter = ICloudStorage(self.context)
         if fieldname not in adapter.valid_fieldnames():
@@ -22,7 +34,14 @@ class CloudStorageProcessing(BrowserView):
         return True
 
     def retrieve(self):
-        if not self.valid_request():
+        """
+        View used by Celery to get the file data of the field specified in the
+        request to be uploaded to cloud storage
+
+        :return: the byte data stored in the field passed in the request
+        :rtype: str
+        """
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
@@ -34,50 +53,30 @@ class CloudStorageProcessing(BrowserView):
         return adapter.get_data_for(fieldname)
 
     def callback(self):
-        # TODO: Change this to fire an event and register handlers
-        if not self.valid_request():
+        """
+        Callback view to allow Celery to alert Plone of the state of uploading
+        or transcoding
+
+        :return: If unable to validate, return an error and 403 status
+        :rtype: HTTPResponse
+        """
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
-        adapter = ICloudStorage(self.context)
-        logger.info('Celery says %s has been uploaded', fieldname)
-        adapter.mark_as_cloud_available(fieldname)
-
-        # Only send email once all fields have been uploaded
-        # TODO: Configurable emails
-        if not adapter.has_uploaded_all_fields():
-            return
-
-        portal = api.portal.get()
-        creator = api.user.get(self.context.Creator())
-        creator_email = creator.getProperty('email')
-        subject = u'%s: Files for "%s" have been uploaded' % (
-            portal.Title().decode('utf8', 'ignore'),
-            self.context.Title().decode('utf8', 'ignore'),
-        )
-        body = """This is an automated email.
-
-File data for the following item has been successfully
-uploaded to secure cloud storage:
-
-%s (%s)
-%s
-""" % (
-            self.context.Title(),
-            self.context.Type(),
-            self.context.absolute_url()
-        )
-        api.portal.send_email(
-            recipient=creator_email,
-            subject=subject,
-            body=body,
-        )
+        activity = self.request.get('activity')
+        if activity == 'upload':
+            notify(UploadComplete(self.context, fieldname))
+        elif activity == 'transcode':
+            notify(TranscodeComplete(self.context, fieldname))
+        else:
+            logger.error('Unknown activity callback from Celery: %s', activity)
 
     def error_callback(self):
         """
         Callback view if there was an error
         """
-        if not self.valid_request():
+        if not self._valid_request():
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
@@ -88,6 +87,9 @@ uploaded to secure cloud storage:
 
 
 class ProcessCloudStorage(BrowserView):
+    """
+    Browser view for Plone for interacting with Cloud Storage
+    """
     def manual_processing(self):
         """
         View to manually trigger processing
