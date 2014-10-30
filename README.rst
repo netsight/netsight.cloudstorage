@@ -5,8 +5,8 @@ Support for offloading Plone file data to the cloud.
 
 This package provides two things:
 
-* Offloading large files to the cloud
-* Transcoding of video to web-compatible format
+- Offloading large files to the cloud
+- Transcoding of video to web-compatible format
 
 At the moment this is done using `Amazon Web Services <http://aws.amazon.com>`_ 
 (S3 for cloudstorage, Elastic Transcoder for transcoding), 
@@ -27,9 +27,9 @@ Buildout configuration
 
 You will need to add the following to your buildout:
 
-* `netsight.cloudstorage` egg into 'eggs'
-* A part to build celery (e.g. using collective.recipe.celery)
-* `broker_url` and `plone_url` variables to your zope instance
+- `netsight.cloudstorage` egg into 'eggs'
+- A part to build celery (e.g. using collective.recipe.celery)
+- `broker_url` and `plone_url` variables to your zope instance
 
 Example buildout config
 -----------------------
@@ -74,13 +74,15 @@ AWS Configuration
 Installing the `netsight.cloudstorage` add-on in the control panel will give you
 a 'CloudStorage Settings' option. You will need to provide:
 
-* Your AWS Access Key
-* Your AWS Secret Access Key
-* S3 bucket name 
+- **Your AWS Access Key**
+- **Your AWS Secret Access Key**
+- **S3 bucket name**
+
   This is the name of the bucket where files will be uploaded.
   If it does not exist, it will be created for you when the first file is
   uploaded.
-* Minimum file size
+- **Minimum file size**
+
   Any files uploaded above this size will automatically be sent to the cloud.
   Smaller files can still be manually uploaded.
 
