@@ -5,8 +5,8 @@ Support for offloading Plone file data to the cloud.
 
 This package provides two things:
 
- * Offloading large files to
- * Transcoding of video to web-compatible format
+* Offloading large files to
+* Transcoding of video to web-compatible format
 
 At the moment this is done using Amazon Web Services (S3 for cloudstorage, 
 Elastic Transcoder for transcoding), but could potentially be expanded to support
@@ -23,9 +23,9 @@ Configuration
 
 You will need to add the following to your buildout:
 
- * `netsight.cloudstorage` egg into 'eggs'
- * A part to build celery (e.g. using collective.recipe.celery)
- * `broker_url` and `plone_url` variables to your zope instance
+* `netsight.cloudstorage` egg into 'eggs'
+* A part to build celery (e.g. using collective.recipe.celery)
+* `broker_url` and `plone_url` variables to your zope instance
 
 Example buildout config
 -----------------------
