@@ -5,18 +5,19 @@ Support for offloading Plone file data to the cloud.
 
 This package provides two things:
 
-* Offloading large files to
+* Offloading large files to the cloud
 * Transcoding of video to web-compatible format
 
-At the moment this is done using Amazon Web Services (S3 for cloudstorage, 
-Elastic Transcoder for transcoding), but could potentially be expanded to support
-other cloud services.
+At the moment this is done using `Amazon Web Services <http://aws.amazon.com>`_ 
+(S3 for cloudstorage, Elastic Transcoder for transcoding), 
+but could potentially be expanded to support other cloud storage services.
 
 Requirements
 ============
 
-Uploads are handled asynchronously by `Celery <http://docs.celeryproject.org>`_, for which you need to configure
-a `supported broker <http://docs.celeryproject.org/en/latest/getting-started/brokers>`_
+Uploads are handled asynchronously by `Celery <http://docs.celeryproject.org>`_,
+for which you need to configure a 
+`supported broker <http://docs.celeryproject.org/en/latest/getting-started/brokers>`_.
 
 Configuration
 =============
@@ -62,6 +63,6 @@ Please note that `plone_url` is used by the celery working to read from and send
 
 ::
 
-    plone_url http://localhost:1234/VirtualHostBase/https/example.com:443/Plone/VirtualHostRoot/
+    plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
 
 
