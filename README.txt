@@ -1,7 +1,7 @@
 .. contents::
 
-Introduction
-============
+netsight.cloudstorage
+=====================
 
 'plone_url' needs to be configured such that the callback from Celery to Plone
 allows Plone to construct proper externally resolveable URLs
