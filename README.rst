@@ -76,6 +76,10 @@ a 'CloudStorage Settings' option. You will need to provide:
 
 - **Your AWS Access Key**
 - **Your AWS Secret Access Key**
+
+  You will need to `generate these <http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html>`_ and give them access
+  to the S3 and Elastic Transcoder services.
+
 - **S3 bucket name**
 
   This is the name of the bucket where files will be uploaded.
