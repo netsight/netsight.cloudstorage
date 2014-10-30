@@ -26,3 +26,9 @@ class ICloudStorageSettings(Interface):
                     u' being served from Plone',
         default=10
     )
+    pipeline_name = schema.TextLine(
+        title=u'Elastic transcoder pipeline name',
+        description=u'The name of the pipeline that will be created in AWS to '
+                    u'manage transcoding jobs. (Limit 30 characters)',
+        max_length=30
+    )
