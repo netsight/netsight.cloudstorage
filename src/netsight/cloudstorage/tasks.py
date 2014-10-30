@@ -48,6 +48,7 @@ class S3Task(Task):
 
 @app.task(base=S3Task)
 def upload_to_s3(bucket_name,
+                 pipeline_name,
                  source_url,
                  callback_url,
                  errorback_url,
@@ -58,8 +59,8 @@ def upload_to_s3(bucket_name,
     """
     Upload a file from the given Plone path to S3
 
-
-
+    :param pipeline_name: Name of the transcoding pipeline to create
+    :type pipeline_name: str
     :param errorback_url: URL to call if the task fails
     :type errorback_url: str
     :param callback_url: URL to call once the upload has completed
@@ -126,6 +127,7 @@ def upload_to_s3(bucket_name,
         'aws_key': aws_key,
         'aws_secret_key': aws_secret_key,
         'bucket_name': bucket_name,
+        'pipeline_name': pipeline_name,
     }
     return retval
 
@@ -165,7 +167,7 @@ def transcode_video(upload_result):
     source_file = upload_result['dest_filename']
     # Pipeline name has a 40 char limit, but we may need to make this
     # configurable later
-    pipeline_name = 'ns-cloudstorage-pipeline'
+    pipeline_name = '%s-pipeline' % upload_result['pipeline_name']
 
     # Create out bucket if it doesn't exist
     s3 = S3Connection(aws_key, aws_secret_key)

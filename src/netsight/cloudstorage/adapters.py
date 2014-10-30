@@ -62,7 +62,6 @@ class CloudStorage(object):
             schema = unwrapped.Schema()
             for field in schema.fields():
                 if field.type in ['file', 'blob']:
-                    # TODO: Put original filename here
                     result.append({
                         'name': field.getName(),
                         'context_uid': self.context.UID(),
@@ -265,6 +264,7 @@ class CloudStorage(object):
             )
             aws_key = get_value_from_registry('aws_access_key')
             aws_secret_key = get_value_from_registry('aws_secret_access_key')
+            pipeline_name = get_value_from_registry('pipeline_name')
             upload_task = upload_to_s3.s(
                 bucket_name=bucket_name,
                 source_url=source_url,
@@ -273,7 +273,8 @@ class CloudStorage(object):
                 field=field,
                 security_token=security_token,
                 aws_key=aws_key,
-                aws_secret_key=aws_secret_key
+                aws_secret_key=aws_secret_key,
+                pipeline_name=pipeline_name,
             )
             logger.info('File mimetype: %s', field['mimetype'])
             if field['mimetype'].startswith('video'):
