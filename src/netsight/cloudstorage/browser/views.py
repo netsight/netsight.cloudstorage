@@ -102,3 +102,10 @@ class ProcessCloudStorage(BrowserView):
         if not referer:
             referer = self.context.absolute_url()
         return self.request.response.redirect(referer)
+
+    def has_cloudstorage(self):
+        """
+        Does this item have cloudstorage-stored data?
+        """
+        adapter = ICloudStorage(self.context)
+        return adapter.has_uploaded_all_fields()

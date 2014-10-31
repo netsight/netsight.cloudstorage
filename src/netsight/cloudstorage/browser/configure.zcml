@@ -34,7 +34,15 @@
       for="Products.CMFCore.interfaces.IContentish"
       class=".views.ProcessCloudStorage"
       attribute="manual_processing"
-      permission="zope.Public"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="has-cloudstorage"
+      for="Products.CMFCore.interfaces.IContentish"
+      class=".views.ProcessCloudStorage"
+      attribute="has_cloudstorage"
+      permission="zope2.View"
       />
 
   <browser:viewlet
