@@ -1,19 +1,21 @@
 netsight.cloudstorage
 =====================
 
-Support for offloading Plone file data to the cloud.
+Support for (securely) offloading Plone file data to the cloud.
 
 This package provides two things:
 
 * Offloading large files to the cloud
 * Transcoding of video to web-compatible format
+* Doing so in a secure manner that doesn't bypass Plone's security model
 
 At the moment this is done using `Amazon Web Services <http://aws.amazon.com>`_ 
 (S3 for cloudstorage, Elastic Transcoder for transcoding), 
 but could potentially be expanded to support other cloud storage services.
 
 File data is first stored in Plone, and then synced to the cloud. Subsequent
-requests for the file data are redirected to a one-time URL in the cloud.
+requests for the file data are redirected to a unique auto-expiring
+cloud URL (which prevents the data from unauthorised access).
 
 Requirements
 ============
