@@ -98,4 +98,7 @@ class ProcessCloudStorage(BrowserView):
         adapter.enqueue(enforce_file_size=False)
         api.portal.show_message(message='Upload initiated',
                                 request=self.request)
-        return self.request.response.redirect(self.context.absolute_url())
+        referer = self.request.get("HTTP_REFERER", "").strip()
+        if not referer:
+            referer = self.context.absolute_url()
+        return self.request.response.redirect(referer)
