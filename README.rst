@@ -36,7 +36,7 @@ You will need to add the following to your buildout:
 Example buildout config
 -----------------------
 
-.. code-block::
+.. code::
 
    [buildout]
    ...
@@ -66,7 +66,7 @@ Example buildout config
 
 Please note that `plone_url` is used by the celery working to read from and send events to Plone. If you are using Virtual Hosting, you will need to include your VH config in the variable e.g.:
 
-.. code-block::
+.. code::
 
     plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
 
