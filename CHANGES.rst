@@ -6,6 +6,12 @@ Changelog
 
 - Added transcoding for video files
   [benc]
+- Added customisable pipeline name
+  [benc]
+- Added fleshed out README
+  [mattss]
+- Added travis config
+  [mattss]
 
 
 1.4 (2014-10-23)
