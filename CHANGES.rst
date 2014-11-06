@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5 (unreleased)
+1.5 (2014-11-06)
 ----------------
 
 - Added transcoding for video files
