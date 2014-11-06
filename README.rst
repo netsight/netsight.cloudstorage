@@ -9,20 +9,24 @@ This package provides two things:
 * Transcoding of video to web-compatible format
 * Doing so in a secure manner that doesn't bypass Plone's security model
 
-At the moment this is done using `Amazon Web Services <http://aws.amazon.com>`_ 
-(S3 for cloudstorage, Elastic Transcoder for transcoding), 
+At the moment this is done using `Amazon Web Services`_
+(S3 for cloudstorage, Elastic Transcoder for transcoding),
 but could potentially be expanded to support other cloud storage services.
 
 File data is first stored in Plone, and then synced to the cloud. Subsequent
 requests for the file data are redirected to a unique auto-expiring
 cloud URL (which prevents the data from unauthorised access).
 
+.. _Amazon Web Services:  http://aws.amazon.com
+
 Requirements
 ============
 
-Uploads are handled asynchronously by `Celery <http://docs.celeryproject.org>`_,
-for which you need to configure a 
-`supported broker <http://docs.celeryproject.org/en/latest/getting-started/brokers>`_.
+Uploads are handled asynchronously by Celery_, for which you need to
+configure a `supported broker`_.
+
+.. _Celery: http://docs.celeryproject.org
+.. _supported broker: http://docs.celeryproject.org/en/latest/getting-started/brokers>
 
 Buildout configuration
 ======================
@@ -78,7 +82,7 @@ a 'CloudStorage Settings' option. You will need to provide:
 
 * Your AWS Access Key
 * Your AWS Secret Access Key
-* S3 bucket name 
+* S3 bucket name
   This is the name of the bucket where files will be uploaded.
   If it does not exist, it will be created for you when the first file is
   uploaded.
@@ -108,9 +112,13 @@ Files with a 'video' mimetype are also sent through a transcoding pipeline.
 This transcoded version is stored separately, and must be manually requested
 by passing 'transcoded=true' on the file download request e.g.
 
-http://myplonesite/folder/myfile/at_download/file?transcoded=true
+.. code::
 
-Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000001-000020 <http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html>`_).
+    http://myplonesite/folder/myfile/at_download/file?transcoded=true
+
+Files are currently transcoded using the 'Generic 480p 16:9' preset (1351620000001-000020_)
+
+.. _1351620000001-000020: http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html>
 
 TODO
 ====
