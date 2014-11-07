@@ -40,7 +40,7 @@ You will need to add the following to your buildout:
 Example buildout config
 -----------------------
 
-.. code::
+.. code:: guess
 
    [buildout]
    ...
@@ -70,9 +70,7 @@ Example buildout config
 
 Please note that `plone_url` is used by the celery working to read from and send events to Plone. If you are using Virtual Hosting, you will need to include your VH config in the variable e.g.:
 
-.. code::
-
-    plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
+  plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
 
 AWS Configuration
 =================
@@ -112,9 +110,7 @@ Files with a 'video' mimetype are also sent through a transcoding pipeline.
 This transcoded version is stored separately, and must be manually requested
 by passing 'transcoded=true' on the file download request e.g.
 
-.. code::
-
-    http://myplonesite/folder/myfile/at_download/file?transcoded=true
+  http://myplonesite/folder/myfile/at_download/file?transcoded=true
 
 Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000001-000020`_)
 
