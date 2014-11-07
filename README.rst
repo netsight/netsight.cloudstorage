@@ -17,16 +17,16 @@ File data is first stored in Plone, and then synced to the cloud. Subsequent
 requests for the file data are redirected to a unique auto-expiring
 cloud URL (which prevents the data from unauthorised access).
 
-.. _Amazon Web Services:  http://aws.amazon.com
+.. _`Amazon Web Services`:  http://aws.amazon.com
 
 Requirements
 ============
 
-Uploads are handled asynchronously by Celery_, for which you need to
+Uploads are handled asynchronously by `Celery`_, for which you need to
 configure a `supported broker`_.
 
-.. _Celery: http://docs.celeryproject.org
-.. _supported broker: http://docs.celeryproject.org/en/latest/getting-started/brokers>
+.. _`Celery`: http://docs.celeryproject.org
+.. _`supported broker`: http://docs.celeryproject.org/en/latest/getting-started/brokers
 
 Buildout configuration
 ======================
@@ -116,9 +116,9 @@ by passing 'transcoded=true' on the file download request e.g.
 
     http://myplonesite/folder/myfile/at_download/file?transcoded=true
 
-Files are currently transcoded using the 'Generic 480p 16:9' preset (1351620000001-000020_)
+Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000001-000020`_)
 
-.. _1351620000001-000020: http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html>
+.. _`1351620000001-000020`: http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html
 
 TODO
 ====
