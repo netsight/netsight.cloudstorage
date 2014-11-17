@@ -10,6 +10,7 @@ from zope.component import queryAdapter
 from ZPublisher.HTTPRequest import FileUpload
 
 from .interfaces import ICloudStorage
+from .utils import get_value_from_config
 
 logger = logging.getLogger('netsight.cloudstorage')
 
@@ -60,10 +61,12 @@ def email_creator(event):
     :param event: The event object
     :type event: :class:`UploadComplete`
     """
+    # Skip this if email notifications are disabled
+    if not get_value_from_config('email_notifications'):
+        return
     context = event.context
     adapter = ICloudStorage(context)
     # Only send email once all fields have been uploaded
-    # TODO: Configurable emails
     if not adapter.has_uploaded_all_fields():
         return
 

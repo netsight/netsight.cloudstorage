@@ -32,3 +32,10 @@ class ICloudStorageSettings(Interface):
                     u'manage transcoding jobs. (Limit 30 characters)',
         max_length=30
     )
+    email_notifications = schema.Bool(
+        title=u'Send email notifications',
+        description=u'Whether or not email notifications are sent when certain'
+                    u' tasks complete. For example once an upload has '
+                    u'finished.',
+        default=True
+    )
