@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6 (unreleased)
+1.6 (2014-11-17)
 ----------------
 
 - Added abaility to disable email notifications
