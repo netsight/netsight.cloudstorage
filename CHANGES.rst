@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.1 (unreleased)
+1.6.1 (2014-11-21)
 ------------------
 
 - Added workaround for "connection reset by peer"
