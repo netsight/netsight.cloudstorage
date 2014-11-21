@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.7 (unreleased)
-----------------
+1.6.1 (unreleased)
+------------------
 
-- Nothing changed yet.
+- Added workaround for "connection reset by peer"
+  [benc]
 
 
 1.6 (2014-11-17)

@@ -11,6 +11,7 @@ import sys
 
 from boto import elastictranscoder
 from boto.gs.connection import Location
+from boto.s3 import connect_to_region
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from celery import Celery, Task
@@ -80,19 +81,25 @@ def upload_to_s3(bucket_name,
     :return: Callback URL and security params for callback task
     :rtype: tuple
     """
-    s3 = S3Connection(aws_key, aws_secret_key)
-    in_bucket = s3.lookup(bucket_name)
+    #TODO: make region configurable
+    region = u'eu-west-1'
+    conn = connect_to_region(
+        region,
+        aws_access_key_id=aws_key,
+        aws_secret_access_key=aws_secret_key
+    )
+    logger.info('Connected to region: %s', conn._connection[0])
+    in_bucket = conn.lookup(bucket_name)
     if in_bucket is None:
         logger.warn(
             'No bucket with name %s exists, creating a new one' %
             bucket_name
         )
-        in_bucket = s3.create_bucket(bucket_name, location=Location.EU)
-
+        in_bucket = conn.create_bucket(bucket_name, location=Location.EU)
+    logger.info('Using bucket %s', bucket_name)
     k = Key(in_bucket)
     dest_filename = '%s-%s' % (field['name'], field['context_uid'])
     k.key = dest_filename
-
     logger.info('Fetching %s from %s', field['name'], source_url)
 
     params = {
