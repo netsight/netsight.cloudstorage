@@ -47,6 +47,30 @@ class S3Task(Task):
         requests.get(error_callback, params=params)
 
 
+def create_bucket(conn, bucket_name):
+    bucket = conn.lookup(bucket_name)
+    if bucket is None:
+        logger.warn(
+            'No bucket with name %s exists, creating a new one' %
+            bucket_name
+        )
+        # TODO: location needs to be configurable
+        bucket = conn.create_bucket(bucket_name, location=Location.EU)
+    return bucket
+
+
+def create_s3_connection(aws_key, aws_secret_key):
+    # TODO: make region configurable
+    region = u'eu-west-1'
+    conn = connect_to_region(
+        region,
+        aws_access_key_id=aws_key,
+        aws_secret_access_key=aws_secret_key
+    )
+    logger.info('Connected to S3 region: %s', conn._connection[0])
+    return conn
+
+
 @app.task(base=S3Task)
 def upload_to_s3(bucket_name,
                  pipeline_name,
@@ -81,21 +105,8 @@ def upload_to_s3(bucket_name,
     :return: Callback URL and security params for callback task
     :rtype: tuple
     """
-    #TODO: make region configurable
-    region = u'eu-west-1'
-    conn = connect_to_region(
-        region,
-        aws_access_key_id=aws_key,
-        aws_secret_access_key=aws_secret_key
-    )
-    logger.info('Connected to region: %s', conn._connection[0])
-    in_bucket = conn.lookup(bucket_name)
-    if in_bucket is None:
-        logger.warn(
-            'No bucket with name %s exists, creating a new one' %
-            bucket_name
-        )
-        in_bucket = conn.create_bucket(bucket_name, location=Location.EU)
+    conn = create_s3_connection(aws_key, aws_secret_key)
+    in_bucket = create_bucket(conn, bucket_name)
     logger.info('Using bucket %s', bucket_name)
     k = Key(in_bucket)
     dest_filename = '%s-%s' % (field['name'], field['context_uid'])
