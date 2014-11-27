@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.6 (unreleased)
+1.6.6 (2014-11-27)
 ------------------
 
 - Removed bucket creation in transcoding - no longer needed as not creating
