@@ -298,6 +298,9 @@ class CloudStorage(object):
         :rtype: str
         """
         storage = self._getStorage()
+        if fieldname not in storage['cloud_available']:
+            logger.warn('%s not available in the cloud', fieldname)
+            return None
         fieldinfo = self.field_info(fieldname)
         if not fieldinfo:
             logger.error('Field info missing from context %s', fieldname)
