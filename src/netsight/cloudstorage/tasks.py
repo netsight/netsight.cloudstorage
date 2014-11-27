@@ -144,7 +144,6 @@ def upload_to_s3(bucket_name,
         'dest_filename': dest_filename,
         'aws_key': aws_key,
         'aws_secret_key': aws_secret_key,
-        'bucket_name': bucket_name,
         'pipeline_name': pipeline_name,
     }
     return retval
@@ -180,21 +179,8 @@ def transcode_video(upload_result):
     """
     aws_key = upload_result['aws_key']
     aws_secret_key = upload_result['aws_secret_key']
-    in_bucket = upload_result['bucket_name']
-    out_bucket = '%s-transcoded' % in_bucket
     source_file = upload_result['dest_filename']
-    # Pipeline name has a 40 char limit, but we may need to make this
-    # configurable later
     pipeline_name = '%s-pipeline' % upload_result['pipeline_name']
-
-    # Create out bucket if it doesn't exist
-    s3 = S3Connection(aws_key, aws_secret_key)
-    if s3.lookup(out_bucket) is None:
-        logger.warn(
-            'No bucket with name %s exists, creating a new one' %
-            out_bucket
-        )
-        s3.create_bucket(out_bucket, location=Location.EU)
 
     transcoder = elastictranscoder.connect_to_region(
         'eu-west-1',
@@ -222,7 +208,7 @@ def transcode_video(upload_result):
         'Container': 'auto'
     }
     transcode_output = {
-        # This preset is a standard one
+        # TODO: Configurable preset
         'PresetId': '1351620000001-000020',
         'Key': source_file
     }
