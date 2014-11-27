@@ -1,10 +1,13 @@
 Changelog
 =========
 
-1.7 (unreleased)
-----------------
+1.6.5 (unreleased)
+------------------
 
-- Nothing changed yet.
+- Removed pipeline creation
+  [benc]
+- Made pipeline name optional in control panel
+  [benc]
 
 
 1.6.1 (2014-11-21)

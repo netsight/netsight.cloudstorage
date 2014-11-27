@@ -30,7 +30,8 @@ class ICloudStorageSettings(Interface):
         title=u'Elastic transcoder pipeline name',
         description=u'The name of the pipeline that will be created in AWS to '
                     u'manage transcoding jobs. (Limit 30 characters)',
-        max_length=30
+        max_length=30,
+        required=False
     )
     email_notifications = schema.Bool(
         title=u'Send email notifications',

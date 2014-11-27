@@ -197,20 +197,9 @@ def transcode_video(upload_result):
     if pipeline_name in pipelines:
         pipeline_id = pipelines[pipeline_name]
     else:
-        logger.warning('Creating new pipeline with name: %s', pipeline_name)
-        pipeline = transcoder.create_pipeline(
-            pipeline_name,
-            in_bucket,
-            out_bucket,
-            role='arn:aws:iam::377178956182:role/Transcoding',
-            notifications={
-                'Progressing': '',
-                'Completed': '',
-                'Warning': '',
-                'Error': ''
-            }
-        )
-        pipeline_id = pipeline['Pipeline']['Id']
+        logger.error('Pipeline %s does not exist. Please contact sysadmin',
+                     pipeline_name)
+        return
 
     logger.info('Creating transcoding job for %s', source_file)
     transcode_input = {
