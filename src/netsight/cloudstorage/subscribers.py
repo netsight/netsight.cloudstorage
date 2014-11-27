@@ -5,12 +5,13 @@
 Event handlers
 """
 import logging
+
 from plone import api
 from zope.component import queryAdapter
 from ZPublisher.HTTPRequest import FileUpload
 
 from .interfaces import ICloudStorage
-from .utils import get_value_from_config
+from .utils import get_value_from_registry
 
 logger = logging.getLogger('netsight.cloudstorage')
 
@@ -62,7 +63,7 @@ def email_creator(event):
     :type event: :class:`UploadComplete`
     """
     # Skip this if email notifications are disabled
-    if not get_value_from_config('email_notifications'):
+    if not get_value_from_registry('email_notifications'):
         return
     context = event.context
     adapter = ICloudStorage(context)
