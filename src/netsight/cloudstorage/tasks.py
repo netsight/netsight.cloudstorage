@@ -12,7 +12,6 @@ import sys
 from boto import elastictranscoder
 from boto.gs.connection import Location
 from boto.s3 import connect_to_region
-from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from celery import Celery, Task
 import requests
@@ -166,7 +165,10 @@ def upload_callback(upload_result):
         params['identifier']
     )
     params['activity'] = 'upload'
-    requests.get(callback_url, params=params)
+    r = requests.get(callback_url, params=params)
+    logger.info('HTTP: %s when calling %s', r.status_code, callback_url)
+    if r.status_code != '200':
+        raise requests.RequestException(response=r)
     return upload_result
 
 
