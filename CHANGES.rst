@@ -4,7 +4,7 @@ Changelog
 1.6.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added more logging to upload_callback to aid debugging
 
 
 1.6.6 (2014-11-27)
