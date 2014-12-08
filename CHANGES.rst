@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.7 (unreleased)
+1.6.7 (2014-12-08)
 ------------------
 
 - Added more logging to upload_callback to aid debugging
