@@ -11,6 +11,7 @@ Changelog
 ------------------
 
 - Added more logging to upload_callback to aid debugging
+  [benc]
 
 
 1.6.6 (2014-11-27)
