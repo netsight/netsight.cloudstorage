@@ -17,8 +17,7 @@ Changelog
 1.6.6 (2014-11-27)
 ------------------
 
-- Removed bucket creation in transcoding - no longer needed as not creating
-pipeline
+- Removed bucket creation in transcoding - no longer needed as not creating pipeline
   [benc]
 - Fixed email notifications configuration
   [benc]
