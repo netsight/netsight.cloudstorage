@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.6.10 (unreleased)
--------------------
+1.7 (unreleased)
+----------------
 
-- Nothing changed yet.
+- Handling of content with multiple fields where at least one is below file
+  size threshold [benc]
 
 
 1.6.9 (2014-12-09)
