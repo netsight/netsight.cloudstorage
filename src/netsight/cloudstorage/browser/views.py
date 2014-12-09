@@ -25,11 +25,15 @@ class CloudStorageProcessing(BrowserView):
         fieldname = self.request.get('identifier')
         adapter = ICloudStorage(self.context)
         if fieldname not in adapter.valid_fieldnames():
-            logger.error('Retrieve got invalid identifier: %s', fieldname)
+            logger.error('Retrieve got invalid identifier: %s on %s',
+                         fieldname,
+                         self.context.absolute_url())
             return False
         token = self.request.get('security_token')
         if token != adapter.security_token_for(fieldname):
-            logger.error('Retrieve got incorrect security token')
+            logger.error('Retrieve got incorrect security token for %s on %s',
+                         fieldname,
+                         self.context.absolute_url())
             return False
         return True
 
@@ -45,8 +49,9 @@ class CloudStorageProcessing(BrowserView):
             self.request.response.setStatus(403)
             return 'Error'
         fieldname = self.request.get('identifier')
-        logger.debug('Returning data to celery for: %s (%s)',
-                     '/'.join(self.context.getPhysicalPath()), fieldname)
+        logger.debug('Returning data to celery for %s on %s',
+                     fieldname,
+                     self.context.absolute_url(),)
         adapter = ICloudStorage(self.context)
         # prevent the data being themed (as this would break it)
         self.request.response.setHeader('X-Theme-Disabled', 'True')
@@ -84,8 +89,10 @@ class CloudStorageProcessing(BrowserView):
             return 'Error'
         fieldname = self.request.get('identifier')
         adapter = ICloudStorage(self.context)
-        logger.warn('Celery encountered and error whilst trying to upload %s. '
-                    'See Celery logs for more details.', fieldname)
+        logger.warn('Celery encountered and error whilst trying to upload %s on'
+                    ' %s . See Celery logs for more details.',
+                    fieldname,
+                    self.context.absolute_url())
         adapter.remove_from_in_progress(fieldname)
 
 

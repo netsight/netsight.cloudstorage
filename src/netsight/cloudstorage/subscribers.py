@@ -35,7 +35,7 @@ def content_saved(object, event):
             if len(value.read()):
                 logger.info(
                     'Found file fields on %s. Enqueing upload',
-                    '/'.join(object.getPhysicalPath())
+                    event.context.absolute_url()
                 )
                 adapter.enqueue()
                 return
@@ -51,7 +51,9 @@ def mark_uploaded(event):
     context = event.context
     fieldname = event.fieldname
     adapter = ICloudStorage(context)
-    logger.info('Celery says %s has been uploaded', fieldname)
+    logger.info('Celery says %s on %s has been uploaded',
+                fieldname,
+                context.absolute_url())
     adapter.mark_as_cloud_available(fieldname)
 
 

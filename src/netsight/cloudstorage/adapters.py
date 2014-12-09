@@ -223,7 +223,7 @@ class CloudStorage(object):
                                   the configured minimum
         :type enforce_file_size: bool
         """
-        logger.info('enqueue called for %s' % self.context.absolute_url())
+        logger.info('Enqueue called for %s' % self.context.absolute_url())
         in_progress = self._getStorage()['in_progress']
         cloud_available = self._getStorage()['cloud_available']
 
@@ -235,8 +235,9 @@ class CloudStorage(object):
             min_size = get_value_from_registry('min_file_size')
             # TODO: Move this out for bulk uploading, not manual
             if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
-                logger.info('File on field %s is too small (< %sMB)',
+                logger.info('Field %s on %s is too small (< %sMB)',
                             field['name'],
+                            self.context.absolute_url(),
                             min_size)
                 continue
 
@@ -255,7 +256,8 @@ class CloudStorage(object):
             plone_url = get_value_from_config('plone_url')
             root_url = '%s/%s' % (plone_url, path)
 
-            logger.info('Queuing field %s to be uploaded', field['name'])
+            logger.info('Queuing field %s on %s to be uploaded', field['name'],
+                        self.context.absolute_url())
             source_url = '%s/@@cloudstorage-retrieve' % root_url
             callback_url = '%s/@@cloudstorage-callback' % root_url
             errorback_url = '%s/@@cloudstorage-error' % root_url
@@ -299,11 +301,13 @@ class CloudStorage(object):
         """
         storage = self._getStorage()
         if fieldname not in storage['cloud_available']:
-            logger.warn('%s not available in the cloud', fieldname)
+            logger.warn('%s on %s not available in the cloud', fieldname,
+                        self.context.absolute_url())
             return None
         fieldinfo = self.field_info(fieldname)
         if not fieldinfo:
-            logger.error('Field info missing from context %s', fieldname)
+            logger.error('Field info for %s missing from context %s', fieldname,
+                         self.context.absolute_url())
             return
         bucket_name = 'netsight-cloudstorage-%s' % get_value_from_registry(
             'bucket_name'
@@ -329,7 +333,8 @@ class CloudStorage(object):
                     '%s-%s' % (fieldname, self.context.UID())
                 )
                 if key is None:
-                    logger.error('File not found: %s', fieldname)
+                    logger.error('File not found: %s on %s', fieldname,
+                                 self.context.absolute_url())
                     return
             else:
                 logger.error('Bucket %s does not exist', bucket_name)
