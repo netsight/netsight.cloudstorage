@@ -4,7 +4,10 @@ Changelog
 1.6.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added more verbose error logging to callback task
+  [benc]
+- Updated requests required version
+  [benc]
 
 
 1.6.7 (2014-12-08)
