@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.7 (unreleased)
+1.7 (2014-12-09)
 ----------------
 
 - Handling of content with multiple fields where at least one is below file
