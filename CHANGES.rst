@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.9 (unreleased)
+1.6.9 (2014-12-09)
 ------------------
 
 - Added more verbose logging throughout [benc]
