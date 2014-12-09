@@ -71,6 +71,9 @@ class CloudStorageProcessing(BrowserView):
             notify(TranscodeComplete(self.context, fieldname))
         else:
             logger.error('Unknown activity callback from Celery: %s', activity)
+        self.request.response.setStatus(200)
+        logger.info('%s on %s marked as uploaded', fieldname, self.context.absolute_url)
+        return 'Success'
 
     def error_callback(self):
         """
