@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.8 (unreleased)
+1.6.8 (2014-12-09)
 ------------------
 
 - Added more verbose error logging to callback task
