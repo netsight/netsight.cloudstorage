@@ -46,7 +46,7 @@ class StatusViewlet(ViewletBase):
         if self.adapter.has_in_progress_uploads():
             return _(u'Uploading of file data to secure cloud storage for this'
                      u' item is currently in progress')
-        elif self.adapter.has_uploaded_all_fields():
+        elif self.adapter.has_uploaded_any_fields():
             return _(u'File data for this item is being served from '
                      u'secure cloud storage')
         else:

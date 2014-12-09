@@ -144,6 +144,17 @@ class CloudStorage(object):
         return set(self.valid_fieldnames()) == \
             set(storage['cloud_available'].keys())
 
+    def has_uploaded_any_fields(self):
+        """
+        Check if the adapted object has uploaded any fields
+
+        :return: whether any of the fields on the adapted object have been
+                 uploaded
+        :rtype: bool
+        """
+        storage = self._getStorage()
+        return len(storage['cloud_available']) > 0
+
     def get_data_for(self, fieldname):
         """
         Return the data stored within the field
