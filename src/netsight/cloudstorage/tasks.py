@@ -168,6 +168,7 @@ def upload_callback(upload_result):
     r = requests.get(callback_url, params=params)
     logger.info('HTTP: %s when calling %s', r.status_code, callback_url)
     if r.status_code != '200':
+        logger.error('Callback request failed: %s', str(vars(r)))
         raise requests.RequestException(response=r)
     return upload_result
 
