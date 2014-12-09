@@ -44,7 +44,7 @@ setup(
         'redis',
         'celery',
         'boto',
-        'requests',
+        'requests>=2.5.0',
         'collective.monkeypatcher',
     ],
     extras_require={'test': [
