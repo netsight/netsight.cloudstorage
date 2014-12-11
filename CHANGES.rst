@@ -4,7 +4,7 @@ Changelog
 1.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed issue with a log line [benc]
 
 
 1.7 (2014-12-09)
