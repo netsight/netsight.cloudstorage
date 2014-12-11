@@ -35,7 +35,7 @@ def content_saved(object, event):
             if len(value.read()):
                 logger.info(
                     'Found file fields on %s. Enqueing upload',
-                    event.context.absolute_url()
+                    object.absolute_url()
                 )
                 adapter.enqueue()
                 return
