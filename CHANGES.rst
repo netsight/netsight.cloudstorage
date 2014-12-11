@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.8 (unreleased)
-----------------
+1.7.1 (2014-12-11)
+------------------
 
 - Fixed issue with a log line [benc]
 
