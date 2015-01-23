@@ -299,7 +299,7 @@ class CloudStorage(object):
             upload_task.link(links)
             upload_task.apply_async()
 
-    def get_url(self, fieldname, transcoded=False):
+    def get_url(self, fieldname, transcoded=False, expiry_seconds=60):
         """
         Get URL of fieldname from S3
 
@@ -356,4 +356,4 @@ class CloudStorage(object):
                         'attachment; filename="%s"' % fieldinfo['filename'],
                     'response-content-type': fieldinfo['mimetype']
                 }
-        return key.generate_url(60, response_headers=response_headers)
+        return key.generate_url(expiry_seconds, response_headers=response_headers)

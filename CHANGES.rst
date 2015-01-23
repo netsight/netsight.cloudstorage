@@ -4,7 +4,7 @@ Changelog
 1.7.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Allow generating differing expiry URLs [benc]
 
 
 1.7.1 (2014-12-11)
