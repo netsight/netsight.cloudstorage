@@ -6,6 +6,14 @@
   <include package="Products.CMFCore" file="permissions.zcml"/>
 
   <browser:page
+      name="download"
+      for="*"
+      class=".download.Download"
+      permission="zope2.View"
+      layer="..interfaces.IProductLayer"
+      />
+
+  <browser:page
       name="cloudstorage-retrieve"
       for="Products.CMFCore.interfaces.IContentish"
       class=".views.CloudStorageProcessing"

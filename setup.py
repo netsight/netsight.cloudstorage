@@ -46,6 +46,7 @@ setup(
         'boto',
         'requests>=2.5.0',
         'collective.monkeypatcher',
+        'plone.browserlayer',
     ],
     extras_require={'test': [
         'plone.app.testing',

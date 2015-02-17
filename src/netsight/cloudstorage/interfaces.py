@@ -8,6 +8,10 @@ from zope import schema
 from zope.interface import Interface
 
 
+class IProductLayer(Interface):
+    """ A layer specific to netsight.cloudstorage """
+
+
 class ICloudStorage(Interface):
     """ Marker interface for CloudStorage adapter """
 
