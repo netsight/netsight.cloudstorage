@@ -37,6 +37,14 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="netsight.cloudstorage uninstall profile"
+      directory="profiles/uninstall"
+      description="Installs the netsight.cloudstorage package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
   <genericsetup:upgradeStep
        title="Upgrade to 0002."
        description="Install browserlayer"

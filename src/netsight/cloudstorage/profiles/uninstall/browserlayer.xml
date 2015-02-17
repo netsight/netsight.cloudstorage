@@ -1,0 +1,5 @@
+<layers>
+    <layer name="netsight.cloudstorage"
+           interface="netsight.cloudstorage.interfaces.IProductLayer"
+           remove="true"/>
+</layers>
