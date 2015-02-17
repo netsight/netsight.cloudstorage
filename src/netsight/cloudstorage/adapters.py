@@ -163,11 +163,13 @@ class CloudStorage(object):
         :return: the byte data contained in the given field
         :rtype: str
         """
-        field = self.context.getField(fieldname)
-        if field is not None:
-            return field.get(self.context)
-        else:
-            return getattr(self.context, fieldname).data
+
+        if hasattr(self.context, 'getField'):
+            field = self.context.getField(fieldname)
+            if field is not None:
+                return field.get(self.context)
+
+        return getattr(self.context, fieldname).data
 
     def security_token_for(self, fieldname):
         """
