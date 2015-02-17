@@ -1,0 +1,14 @@
+from Products.CMFCore.utils import getToolByName
+
+
+PROFILE_ID = 'profile-netsight.cloudstorage:default'
+
+
+def upgrade_to_0002(context, logger=None):
+    if logger is None:
+        from logging import getLogger
+        logger = getLogger('esdrt.content.upgrades.0001_0002')
+
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(PROFILE_ID, 'browserlayer')
+    logger.info('Browserlayer installed')
