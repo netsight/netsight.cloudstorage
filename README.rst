@@ -40,7 +40,7 @@ You will need to add the following to your buildout:
 Example buildout config
 -----------------------
 
-.. code:: guess
+.. code:: ini
 
    [buildout]
    ...
