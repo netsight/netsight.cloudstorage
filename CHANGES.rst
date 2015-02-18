@@ -4,6 +4,10 @@ Changelog
 1.7.2 (unreleased)
 ------------------
 
+- Better support of dexterity content-types using plone.namedfile.
+  Now dexterity types' blobs are uploaded automatically to cloud
+  storage [erral]
+
 - Allow generating differing expiry URLs [benc]
 
 
