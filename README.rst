@@ -72,6 +72,11 @@ Please note that `plone_url` is used by the celery working to read from and send
 
   plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
 
+An example buildout configuration for redis is provided in case you want to configure
+it using buildout and run with supervisor. Look at files `redis.cfg` and `redis.conf.tpl`
+for more information.
+
+
 AWS Configuration
 =================
 
