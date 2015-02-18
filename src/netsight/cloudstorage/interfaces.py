@@ -30,6 +30,12 @@ class ICloudStorageSettings(Interface):
                     u' being served from Plone',
         default=10
     )
+    transcoding_enabled = schema.Bool(
+        title=u'Video transcoding enabled?',
+        description=u'Whether or not files with "video" mimetype will be '
+                    u'transcoded using Elastic Transcoder ',
+        default=True
+    )
     pipeline_name = schema.TextLine(
         title=u'Elastic transcoder pipeline name',
         description=u'The name of the pipeline that will be created in AWS to '
