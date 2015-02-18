@@ -106,13 +106,29 @@ the security of the cloud data.
 Transcoding
 ===========
 
-Files with a 'video' mimetype are also sent through a transcoding pipeline.
+Files with a 'video' mimetype are also sent through a transcoding pipeline if this
+option is enabled in the control panel.
+
 This transcoded version is stored separately, and must be manually requested
 by passing 'transcoded=true' on the file download request e.g.
 
   http://myplonesite/folder/myfile/at_download/file?transcoded=true
 
 Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000001-000020`_)
+
+To enable transcoding, you first need to create a specific S3 bucket to save the
+transcoded files. This specific S3 bucket must be called like the one used to
+store the files, but ended in "-transcoded". If you S3 bucket will be called
+"netsight-cloudstorage-plone-storage", you need to create a new bucket called
+"netsight-cloudstorage-plone-storage-transcoded".
+
+Then you need to create a transcoding pipeline. To do that, login to your AWS account,
+go to Application Services -> Elastic Transcoder and create a new Pipeline. Choose a
+name for the pipeline (you will have to set this name in the Control Panel), set
+the default S3 bucket ("netsight-cloudstorage-plone-storage") as an input bucket and
+set the new one ("netsight-cloudstorage-plone-storage-transcoded") as an ouput bucket
+both for files and playlists, and also for thumbnails.
+
 
 .. _`1351620000001-000020`: http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html
 
