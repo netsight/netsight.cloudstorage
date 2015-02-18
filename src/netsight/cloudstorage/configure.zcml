@@ -48,7 +48,7 @@
 
   <genericsetup:upgradeStep
        title="Upgrade to 0002."
-       description="Install browserlayer"
+       description="Install browserlayer and set new registry settings"
        source="0001"
        destination="0002"
        handler=".upgrade.upgrade_to_0002"

@@ -12,3 +12,5 @@ def upgrade_to_0002(context, logger=None):
     setup = getToolByName(context, 'portal_setup')
     setup.runImportStepFromProfile(PROFILE_ID, 'browserlayer')
     logger.info('Browserlayer installed')
+    setup.runImportStepFromProfile(PROFILE_ID, 'plone.app.registry')
+    logger.info('Registry settings reloaded')
