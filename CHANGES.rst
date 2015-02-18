@@ -4,6 +4,8 @@ Changelog
 1.7.2 (unreleased)
 ------------------
 
+- Add a control panel option to disable transcoding [erral]
+
 - Better support of dexterity content-types using plone.namedfile.
   Now dexterity types' blobs are uploaded automatically to cloud
   storage [erral]

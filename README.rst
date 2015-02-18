@@ -120,6 +120,5 @@ TODO
 ====
 
 * Remove data from the cloud when it is removed from Plone
-* Make transcoding step optional
 * Support for other transcoding presets
 * Support other cloud backends
