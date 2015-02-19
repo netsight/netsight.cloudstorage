@@ -123,7 +123,7 @@ Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000
 
 To enable transcoding, you first need to create a specific S3 bucket to save the
 transcoded files. This specific S3 bucket must be called like the one used to
-store the files, but ended in "-transcoded". If you S3 bucket will be called
+store the files, but ended in "-transcoded". If you S3 bucket is called
 "netsight-cloudstorage-plone-storage", you need to create a new bucket called
 "netsight-cloudstorage-plone-storage-transcoded".
 
