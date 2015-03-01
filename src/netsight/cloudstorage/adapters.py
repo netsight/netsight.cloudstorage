@@ -163,11 +163,13 @@ class CloudStorage(object):
         :return: the byte data contained in the given field
         :rtype: str
         """
-        field = self.context.getField(fieldname)
-        if field is not None:
-            return field.get(self.context)
-        else:
-            return getattr(self.context, fieldname).data
+
+        if hasattr(self.context, 'getField'):
+            field = self.context.getField(fieldname)
+            if field is not None:
+                return field.get(self.context)
+
+        return getattr(self.context, fieldname).data
 
     def security_token_for(self, fieldname):
         """
@@ -290,7 +292,10 @@ class CloudStorage(object):
                 pipeline_name=pipeline_name,
             )
             logger.info('File mimetype: %s', field['mimetype'])
-            if field['mimetype'].startswith('video'):
+            transcoding_enabled = get_value_from_registry(
+                'transcoding_enabled'
+            )
+            if transcoding_enabled and field['mimetype'].startswith('video'):
                 links = group(upload_callback.s(),
                               transcode_video.s(),
                               transcode_callback.s())

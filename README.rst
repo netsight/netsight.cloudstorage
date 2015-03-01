@@ -40,7 +40,7 @@ You will need to add the following to your buildout:
 Example buildout config
 -----------------------
 
-.. code:: guess
+.. code:: ini
 
    [buildout]
    ...
@@ -71,6 +71,11 @@ Example buildout config
 Please note that `plone_url` is used by the celery working to read from and send events to Plone. If you are using Virtual Hosting, you will need to include your VH config in the variable e.g.:
 
   plone_url http://localhost:8080/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/
+
+An example buildout configuration for redis is provided in case you want to configure
+it using buildout and run with supervisor. Look at files `redis.cfg` and `redis.conf.tpl`
+for more information.
+
 
 AWS Configuration
 =================
@@ -106,7 +111,9 @@ the security of the cloud data.
 Transcoding
 ===========
 
-Files with a 'video' mimetype are also sent through a transcoding pipeline.
+Files with a 'video' mimetype are also sent through a transcoding pipeline if this
+option is enabled in the control panel.
+
 This transcoded version is stored separately, and must be manually requested
 by passing 'transcoded=true' on the file download request e.g.
 
@@ -114,12 +121,25 @@ by passing 'transcoded=true' on the file download request e.g.
 
 Files are currently transcoded using the 'Generic 480p 16:9' preset (`1351620000001-000020`_)
 
+To enable transcoding, you first need to create a specific S3 bucket to save the
+transcoded files. This specific S3 bucket must be called like the one used to
+store the files, but ended in "-transcoded". If you S3 bucket is called
+"netsight-cloudstorage-plone-storage", you need to create a new bucket called
+"netsight-cloudstorage-plone-storage-transcoded".
+
+Then you need to create a transcoding pipeline. To do that, login to your AWS account,
+go to Application Services -> Elastic Transcoder and create a new Pipeline. Choose a
+name for the pipeline (you will have to set this name in the Control Panel), set
+the default S3 bucket ("netsight-cloudstorage-plone-storage") as an input bucket and
+set the new one ("netsight-cloudstorage-plone-storage-transcoded") as an ouput bucket
+both for files and playlists, and also for thumbnails.
+
+
 .. _`1351620000001-000020`: http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/system-presets.html
 
 TODO
 ====
 
 * Remove data from the cloud when it is removed from Plone
-* Make transcoding step optional
 * Support for other transcoding presets
 * Support other cloud backends

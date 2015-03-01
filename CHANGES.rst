@@ -4,6 +4,15 @@ Changelog
 1.7.2 (unreleased)
 ------------------
 
+- Provide an example of how to install and configure a redis server
+  with buildout [erral]
+
+- Add a control panel option to disable transcoding [erral]
+
+- Better support of dexterity content-types using plone.namedfile.
+  Now dexterity types' blobs are uploaded automatically to cloud
+  storage [erral]
+
 - Allow generating differing expiry URLs [benc]
 
 

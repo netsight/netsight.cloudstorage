@@ -8,6 +8,10 @@ from zope import schema
 from zope.interface import Interface
 
 
+class IProductLayer(Interface):
+    """ A layer specific to netsight.cloudstorage """
+
+
 class ICloudStorage(Interface):
     """ Marker interface for CloudStorage adapter """
 
@@ -25,6 +29,12 @@ class ICloudStorageSettings(Interface):
                     u'will be automatically uploaded to cloud storage to avoid'
                     u' being served from Plone',
         default=10
+    )
+    transcoding_enabled = schema.Bool(
+        title=u'Video transcoding enabled?',
+        description=u'Whether or not files with "video" mimetype will be '
+                    u'transcoded using Elastic Transcoder ',
+        default=True
     )
     pipeline_name = schema.TextLine(
         title=u'Elastic transcoder pipeline name',
