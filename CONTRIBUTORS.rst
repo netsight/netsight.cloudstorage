@@ -1,2 +1,3 @@
 - Ben Cole (Architecture and initial implementation)
 - Matthew Sital-Singh (Implementation and documentation)
+- Mikel Larreategi (Improved Dexterity support and optional transcoding)
