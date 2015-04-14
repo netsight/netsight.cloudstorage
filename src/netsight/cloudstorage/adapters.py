@@ -246,7 +246,6 @@ class CloudStorage(object):
                 continue
 
             min_size = get_value_from_registry('min_file_size')
-            # TODO: Move this out for bulk uploading, not manual
             if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
                 logger.info('Field %s on %s is too small (< %sMB)',
                             field['name'],
