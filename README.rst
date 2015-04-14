@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/netsight/netsight.cloudstorage.svg?branch=master
+    :target: https://travis-ci.org/netsight/netsight.cloudstorage
+    
 netsight.cloudstorage
 =====================
 
