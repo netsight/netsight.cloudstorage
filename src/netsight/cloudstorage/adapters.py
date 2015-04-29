@@ -245,6 +245,10 @@ class CloudStorage(object):
                 # Ignore empty fields
                 continue
 
+            # Remove existing cloud info, assuming file data has changed
+            if field['name'] in cloud_available:
+                del cloud_available[field['name']]
+
             min_size = get_value_from_registry('min_file_size')
             # TODO: Move this out for bulk uploading, not manual
             if field['size'] < min_size * 1024 * 1024 and enforce_file_size:
@@ -253,10 +257,6 @@ class CloudStorage(object):
                             self.context.absolute_url(),
                             min_size)
                 continue
-
-            # Remove existing cloud info, assuming file data has changed
-            if field['name'] in cloud_available:
-                del cloud_available[field['name']]
 
             # unique token for this job
             security_token = uuid4().hex
