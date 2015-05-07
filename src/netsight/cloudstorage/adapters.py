@@ -141,8 +141,8 @@ class CloudStorage(object):
         :rtype: bool
         """
         storage = self._getStorage()
-        return set(self.valid_fieldnames()) == \
-            set(storage['cloud_available'].keys())
+        return (set(self.valid_fieldnames()) ==
+                set(storage['cloud_available'].keys()))
 
     def has_uploaded_any_fields(self):
         """
@@ -218,8 +218,8 @@ class CloudStorage(object):
         :rtype: bool
         """
         s3 = self._get_s3_connection()
-        bucket_name = 'netsight-cloudstorage-%s-transcoded' % \
-                      get_value_from_registry('bucket_name')
+        bucket_name = ('netsight-cloudstorage-%s-transcoded' % 
+                       get_value_from_registry('bucket_name'))
         bucket = s3.lookup(bucket_name)
         if bucket is None:
             logger.warn('Transcoded bucket does not exist %s', bucket_name)
