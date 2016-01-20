@@ -96,6 +96,29 @@ a 'CloudStorage Settings' option. You will need to provide:
   Any files uploaded above this size will automatically be sent to the cloud.
   Smaller files can still be manually uploaded.
 
+Example AWS Policy
+------------------
+
+Here is an example policy you can use to grant a specific user access to a specific S3 bucket:
+
+.. code:: json
+
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::netsight-cloudstorage-mybucket",
+                "arn:aws:s3:::netsight-cloudstorage-mybucket/*"
+            ]
+        }
+    ]
+  }
+
+For more details on AWS users and policies, see http://docs.aws.amazon.com/IAM/latest/UserGuide/access.html
+
 How it works
 ============
 
