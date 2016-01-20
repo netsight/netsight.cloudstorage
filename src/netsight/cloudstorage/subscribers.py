@@ -80,7 +80,7 @@ def email_creator(event):
         portal.Title().decode('utf8', 'ignore'),
         context.Title().decode('utf8', 'ignore'),
     )
-    body = """This is an automated email.
+    body = u"""This is an automated email.
 
     File data for the following item has been successfully
     uploaded to secure cloud storage:
@@ -88,9 +88,9 @@ def email_creator(event):
     %s (%s)
     %s
     """ % (
-        context.Title(),
-        context.Type(),
-        context.absolute_url()
+        context.Title().decode('utf8', 'ignore'),
+        context.Type().decode('utf8', 'ignore'),
+        context.absolute_url().decode('utf8', 'ignore')
     )
     api.portal.send_email(
         recipient=creator_email,
