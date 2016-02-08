@@ -82,6 +82,13 @@
       />
 
   <subscriber
+      for="Products.CMFCore.interfaces.IContentish
+           zope.container.interfaces.IObjectRemovedEvent"
+      handler=".subscribers.content_removed"
+      />
+
+
+  <subscriber
       for="netsight.cloudstorage.events.IUploadComplete"
       handler=".subscribers.mark_uploaded"/>
 
