@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.8 (unreleased)
-------------------
+1.8 (2016-02-09)
+----------------
 
 - Provide an example of how to install and configure a redis server
   with buildout [erral]
