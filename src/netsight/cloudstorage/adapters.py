@@ -103,9 +103,19 @@ class CloudStorage(object):
         return S3Connection(aws_key, aws_secret_key)
 
     def _get_bucket(self):
-        """Look up the bucket set in the registry"""
+        """Look up the standard bucket set in the registry"""
         s3 = self._get_s3_connection()
-        bucket_name = ('netsight-cloudstorage-%s-transcoded' % 
+        bucket_name = ('netsight-cloudstorage-%s' %
+                       get_value_from_registry('bucket_name'))
+        bucket = s3.lookup(bucket_name)
+        if bucket is None:
+            logger.warn('Storage bucket does not exist %s', bucket_name)
+        return bucket
+
+    def _get_transcoded_bucket(self):
+        """Look up the transcoded bucket set in the registry"""
+        s3 = self._get_s3_connection()
+        bucket_name = ('netsight-cloudstorage-%s-transcoded' %
                        get_value_from_registry('bucket_name'))
         bucket = s3.lookup(bucket_name)
         if bucket is None:
@@ -228,7 +238,7 @@ class CloudStorage(object):
                  storage
         :rtype: bool
         """
-        bucket = self._get_bucket()
+        bucket = self._get_transcoded_bucket()
         if bucket is None:
             return
         return bucket.get_key(
@@ -237,21 +247,27 @@ class CloudStorage(object):
 
     def delete_from_cloud(self):
         cloud_available = self._getStorage()['cloud_available']
+
         if not cloud_available:
             return
 
         bucket = self._get_bucket()
         if bucket is None:
             return
-        
+
         for fieldname in cloud_available:
             key = bucket.get_key(
                 '%s-%s' % (fieldname, self.context.UID())
             )
             if key is not None:
+                logger.info(
+                    'Removing item from cloud storage: %s (%s)' % (
+                        self.context.absolute_url(),
+                        fieldname))
                 key.delete()
-            del cloud_available[field['name']]
-    
+
+        cloud_available.clear()
+
     def enqueue(self, enforce_file_size=True):
         """
         Dispatch any relevant file fields off to Celery
