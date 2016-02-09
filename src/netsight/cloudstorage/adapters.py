@@ -97,9 +97,27 @@ class CloudStorage(object):
         return result
 
     def _get_s3_connection(self):
+        """Set up an S3 connection using the registry settings"""
         aws_key = get_value_from_registry('aws_access_key')
         aws_secret_key = get_value_from_registry('aws_secret_access_key')
         return S3Connection(aws_key, aws_secret_key)
+
+    def _get_bucket(self, postfix=None):
+        """Look up the a bucket set in the registry"""
+        s3 = self._get_s3_connection()
+        bucket_name = 'netsight-cloudstorage-{reg_value}'.format(
+            reg_value=get_value_from_registry('bucket_name')
+        )
+        if postfix:
+            bucket_name += postfix
+        bucket = s3.lookup(bucket_name)
+        if bucket is None:
+            logger.warn('Bucket does not exist %s', bucket_name)
+        return bucket
+
+    def _get_transcoded_bucket(self):
+        """Look up the transcoded bucket set in the registry"""
+        return self._get_bucket(postfix='-transcoded')
 
     def field_info(self, fieldname):
         """
@@ -217,16 +235,36 @@ class CloudStorage(object):
                  storage
         :rtype: bool
         """
-        s3 = self._get_s3_connection()
-        bucket_name = ('netsight-cloudstorage-%s-transcoded' % 
-                       get_value_from_registry('bucket_name'))
-        bucket = s3.lookup(bucket_name)
+        bucket = self._get_transcoded_bucket()
         if bucket is None:
-            logger.warn('Transcoded bucket does not exist %s', bucket_name)
             return
         return bucket.get_key(
             '%s-%s' % (fieldname, self.context.UID())
         ) is not None
+
+    def delete_from_cloud(self):
+        cloud_available = self._getStorage()['cloud_available']
+
+        if not cloud_available:
+            return
+
+        normal_bucket = self._get_bucket()
+        transcoded_bucket = self._get_transcoded_bucket()
+        all_buckets = filter(None, [normal_bucket, transcoded_bucket])
+
+        for bucket in all_buckets:
+            for fieldname in cloud_available:
+                key = bucket.get_key(
+                    '%s-%s' % (fieldname, self.context.UID())
+                )
+                if key is not None:
+                    logger.info(
+                        'Removing item from cloud storage: %s (%s)' % (
+                            self.context.absolute_url(),
+                            fieldname))
+                    key.delete()
+
+        cloud_available.clear()
 
     def enqueue(self, enforce_file_size=True):
         """

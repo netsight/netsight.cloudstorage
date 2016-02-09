@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.7.2 (unreleased)
+1.8 (unreleased)
 ------------------
 
 - Provide an example of how to install and configure a redis server
@@ -15,6 +15,7 @@ Changelog
 
 - Allow generating differing expiry URLs [benc]
 
+- Remove files from cloud when removed from Plone [mattss]
 
 1.7.1 (2014-12-11)
 ------------------
