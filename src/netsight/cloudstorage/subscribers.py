@@ -45,12 +45,10 @@ def content_removed(ob, event):
     """
     When an object is removed, delete it from the cloud
     """
-    adapter = queryAdapter(object, ICloudStorage)
-    if adapter is None:
-        return
+    adapter = queryAdapter(ob, ICloudStorage)
 
-    logger.info('Removing item from cloud storage: %s' % ob.absolute_url())
-    adapter.delete_from_cloud()
+    if adapter is not None:
+        adapter.delete_from_cloud()
 
 
 def mark_uploaded(event):
