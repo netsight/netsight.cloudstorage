@@ -102,25 +102,22 @@ class CloudStorage(object):
         aws_secret_key = get_value_from_registry('aws_secret_access_key')
         return S3Connection(aws_key, aws_secret_key)
 
-    def _get_bucket(self):
-        """Look up the standard bucket set in the registry"""
+    def _get_bucket(self, postfix=None):
+        """Look up the a bucket set in the registry"""
         s3 = self._get_s3_connection()
-        bucket_name = ('netsight-cloudstorage-%s' %
-                       get_value_from_registry('bucket_name'))
+        bucket_name = 'netsight-cloudstorage-{reg_value}'.format(
+            reg_value=get_value_from_registry('bucket_name')
+        )
+        if postfix:
+            bucket_name += postfix
         bucket = s3.lookup(bucket_name)
         if bucket is None:
-            logger.warn('Storage bucket does not exist %s', bucket_name)
+            logger.warn('Bucket does not exist %s', bucket_name)
         return bucket
 
     def _get_transcoded_bucket(self):
         """Look up the transcoded bucket set in the registry"""
-        s3 = self._get_s3_connection()
-        bucket_name = ('netsight-cloudstorage-%s-transcoded' %
-                       get_value_from_registry('bucket_name'))
-        bucket = s3.lookup(bucket_name)
-        if bucket is None:
-            logger.warn('Transcoded bucket does not exist %s', bucket_name)
-        return bucket
+        return self._get_bucket(postfix='-transcoded')
 
     def field_info(self, fieldname):
         """
@@ -266,7 +263,6 @@ class CloudStorage(object):
                             self.context.absolute_url(),
                             fieldname))
                     key.delete()
-                    logger.info('Deleted')
 
         cloud_available.clear()
 
