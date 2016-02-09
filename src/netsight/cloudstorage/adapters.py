@@ -251,20 +251,22 @@ class CloudStorage(object):
         if not cloud_available:
             return
 
-        bucket = self._get_bucket()
-        if bucket is None:
-            return
+        normal_bucket = self._get_bucket()
+        transcoded_bucket = self._get_transcoded_bucket()
+        all_buckets = filter(None, [normal_bucket, transcoded_bucket])
 
-        for fieldname in cloud_available:
-            key = bucket.get_key(
-                '%s-%s' % (fieldname, self.context.UID())
-            )
-            if key is not None:
-                logger.info(
-                    'Removing item from cloud storage: %s (%s)' % (
-                        self.context.absolute_url(),
-                        fieldname))
-                key.delete()
+        for bucket in all_buckets:
+            for fieldname in cloud_available:
+                key = bucket.get_key(
+                    '%s-%s' % (fieldname, self.context.UID())
+                )
+                if key is not None:
+                    logger.info(
+                        'Removing item from cloud storage: %s (%s)' % (
+                            self.context.absolute_url(),
+                            fieldname))
+                    key.delete()
+                    logger.info('Deleted')
 
         cloud_available.clear()
 
