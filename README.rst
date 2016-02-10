@@ -166,6 +166,5 @@ both for files and playlists, and also for thumbnails.
 TODO
 ====
 
-* Remove data from the cloud when it is removed from Plone
 * Support for other transcoding presets
 * Support other cloud backends
