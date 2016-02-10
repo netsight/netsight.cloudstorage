@@ -23,8 +23,12 @@ class TestCloudStorage(BaseTestCase):
         )
 
     def test__getFields(self):
-        fields = ICloudStorage(self.a_file)._getFields()
+        fields = ICloudStorage(self.a_file)._getFields(ignore_empty=True)
+        self.assertEqual(len(fields), 0)
+
+        fields = ICloudStorage(self.a_file)._getFields(ignore_empty=False)
         self.assertGreater(len(fields), 0)
+
         fields = ICloudStorage(self.doc)._getFields()
         self.assertEqual(len(fields), 0)
 
