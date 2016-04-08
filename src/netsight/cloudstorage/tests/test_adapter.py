@@ -1,6 +1,7 @@
 import os
 from plone import api
 from App.config import getConfiguration
+from moto import mock_s3
 
 from .base import BaseTestCase
 from ..interfaces import ICloudStorage
@@ -22,6 +23,11 @@ class TestCloudStorage(BaseTestCase):
             'netsight.cloudstorage.interfaces.ICloudStorageSettings.'
             'min_file_size',
             0,
+        )
+        api.portal.set_registry_record(
+            'netsight.cloudstorage.interfaces.ICloudStorageSettings.'
+            'bucket_name',
+            u'testing',
         )
         portal = api.portal.get()
 
@@ -57,6 +63,7 @@ class TestCloudStorage(BaseTestCase):
         fields = ICloudStorage(self.doc)._getFields()
         self.assertEqual(len(fields), 0)
 
+    @mock_s3
     def test_enqueue(self):
         """
         Not actually testing Celery or AWS.
