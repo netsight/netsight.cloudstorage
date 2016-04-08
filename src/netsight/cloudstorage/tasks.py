@@ -8,6 +8,7 @@ from io import BytesIO
 import logging
 import math
 import sys
+import os
 
 from boto import elastictranscoder
 from boto.gs.connection import Location
@@ -20,6 +21,8 @@ logger = logging.getLogger('netsight.cloudstorage.celery_tasks')
 # TODO: Make broker_url customisable (OMG SO HARD!!)
 broker_url = 'redis://localhost:6379/0'
 app = Celery('netsight.cloudstorage.tasks', broker=broker_url)
+if os.environ.get('CELERY_CONFIG_MODULE', None):
+    app.config_from_envvar('CELERY_CONFIG_MODULE')
 
 
 class S3Task(Task):
@@ -104,6 +107,7 @@ def upload_to_s3(bucket_name,
     :return: Callback URL and security params for callback task
     :rtype: tuple
     """
+    import pdb; pdb.set_trace()
     conn = create_s3_connection(aws_key, aws_secret_key)
     in_bucket = create_bucket(conn, bucket_name)
     logger.info('Using bucket %s', bucket_name)
