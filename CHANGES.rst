@@ -4,7 +4,8 @@ Changelog
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Remove dependency on plone.namedfile
+  [mattss]
 
 
 1.8 (2016-02-09)
