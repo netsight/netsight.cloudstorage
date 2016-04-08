@@ -50,6 +50,7 @@ setup(
     ],
     extras_require={'test': [
         'plone.app.testing',
+        'moto',
     ]},
     entry_points="""
       # -*- Entry points: -*-
