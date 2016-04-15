@@ -51,6 +51,7 @@ setup(
     extras_require={'test': [
         'plone.app.testing',
         'moto',
+        'requests-mock',
     ]},
     entry_points="""
       # -*- Entry points: -*-

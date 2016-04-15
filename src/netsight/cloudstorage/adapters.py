@@ -302,7 +302,7 @@ class CloudStorage(object):
             # job goes on queue
             transaction.commit()
 
-            path = '/'.join(self.context.getPhysicalPath())
+            path = '/'.join(self.context.getPhysicalPath()[2:])
             plone_url = get_value_from_config('plone_url')
             root_url = '%s/%s' % (plone_url, path)
 

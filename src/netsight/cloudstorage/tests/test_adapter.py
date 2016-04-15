@@ -1,4 +1,5 @@
 import os
+import requests_mock
 from plone import api
 from App.config import getConfiguration
 from moto import mock_s3
@@ -57,6 +58,12 @@ class TestCloudStorage(BaseTestCase):
         fields = ICloudStorage(self.a_file)._getFields(ignore_empty=True)
         self.assertEqual(len(fields), 1)
 
+        field = fields[0]
+        self.assertEqual(field['mimetype'], 'application/pdf')
+        self.assertEqual(field['filename'], 'test.pdf')
+        self.assertEqual(field['context_uid'],
+                         self.a_file.UID())
+
         fields = ICloudStorage(self.a_file)._getFields(ignore_empty=False)
         self.assertGreater(len(fields), 0)
 
@@ -72,4 +79,12 @@ class TestCloudStorage(BaseTestCase):
         2. check that it has "in_progress" fields
 
         """
-        ICloudStorage(self.a_file).enqueue()
+        adapter = ICloudStorage(self.a_file)
+
+        with requests_mock.mock() as m:
+            m.get(
+                '{}/@@cloudstorage-retrieve'.format(
+                    self.a_file.absolute_url()
+                ),
+                content='foobs')
+            adapter.enqueue()
